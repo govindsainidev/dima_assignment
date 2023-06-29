@@ -1,2 +1,1 @@
-# dima_assignment
-A Library web application
+# A Library web application

@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Lib.Domains\Lib.Domains.csproj" />
     <ProjectReference Include="..\Lib.NugetsPackages\Lib.NugetsPackages.csproj" />
+    <ProjectReference Include="..\Lib.Services\Lib.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,5 +20,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Core\" />
   </ItemGroup>
 </Project>

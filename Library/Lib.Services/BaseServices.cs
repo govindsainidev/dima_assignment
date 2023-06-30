@@ -1,15 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Lib.Services.Core;
+using Microsoft.Extensions.Options;
+using System.Data;
 
 namespace Lib.Services
 {
     public class BaseServices
     {
-        public BaseServices(string connectionString)
+        protected internal IDbConnection _idbConnection;
+        protected internal IDbTransaction _idbTransaction;
+        protected internal string _connectionString;
+        
+        public BaseServices(IDbConnection sqlConnection, IDbTransaction dbTransaction)
         {
-            ConnectionString = connectionString;
+            _idbConnection = sqlConnection;
+            _idbTransaction = dbTransaction;
         }
-        public string ConnectionString { get; private set; }
+
+        //public BaseServices(string connectionString)
+        //{
+        //    _connectionString = connectionString;
+        //}
     }
 }

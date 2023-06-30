@@ -1,4 +1,4 @@
-﻿namespace Lib.Web.Core
+﻿namespace Lib.Services.Core
 {
     public class AppSettings
     {

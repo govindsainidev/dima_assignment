@@ -11,7 +11,13 @@ namespace Lib.Services.Paging
         public int? length { get; set; }
         public List<Column> columns { get; set; }
         public Search search { get; set; }
-        public List<object> order { get; set; }
+        public List<Order> order { get; set; }
+    }
+
+    public class Order
+    {
+        public string dir { get; set; }
+        public int column { get; set; }
     }
 
     public class Column

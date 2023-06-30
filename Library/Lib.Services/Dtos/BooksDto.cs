@@ -9,8 +9,6 @@ namespace Lib.Services.Dtos
         public string Title { get; set; }
         public string AuthorName { get; set; }
         public int? GenereId { get; set; }
-        
-        
        
     }
     public class AddBookDto : BooksBaseDto

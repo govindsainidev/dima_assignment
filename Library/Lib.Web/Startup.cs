@@ -33,7 +33,7 @@ namespace Lib.Web
             services.AddAuthorization();
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-
+            services.Configure<AdminSettings>(Configuration.GetSection("AdminSettings"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
         }
@@ -52,6 +52,7 @@ namespace Lib.Web
                 app.UseHsts();
             }
 
+            ServiceActivator.Configure(app.ApplicationServices);
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
 

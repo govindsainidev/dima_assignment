@@ -10,4 +10,5 @@
         public string[] AllowOriginsUrls { get; set; }
         public bool RequestLog { get; set; }
     }
+
 }

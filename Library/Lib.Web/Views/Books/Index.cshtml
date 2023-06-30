@@ -5,6 +5,7 @@
         <tr>
             <th>Title</th>
             <th>Author Name</th>
+            <th>Genere</th>
             <th>Created At</th>
             <th>Action</th>
         </tr>
@@ -15,19 +16,28 @@
     <script>
         $(document).ready(function () {
             $('#customerDatatable').dataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        text: 'My button',
+                        action: function (e, dt, node, config) {
+                            alert('Button activated');
+                        }
+                    }
+                ],
                 "processing": true,
                 "serverSide": true,
+                "ordering": false,
                 "filter": true,
                 "ajax": {
                     "url": "@Url.Action("GetPaging","Books")",
                     "type": "POST",
-                    "datatype": "json"
+                    "datatype": "json",
+                    "error": function (jqXHR, textStatus, errorThrown) {
+                        debugger;
+                        jqXHR.responseJSON
+                    }
                 },
-                "columnDefs": [{
-                    "targets": [0],
-                    "visible": false,
-                    "searchable": false
-                }],
                 "columns": [
                     { "data": "title", "autoWidth": true },
                     { "data": "authorName", "autoWidth": true },

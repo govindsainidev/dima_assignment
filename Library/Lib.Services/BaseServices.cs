@@ -2,26 +2,61 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
 
 namespace Lib.Services
 {
-    public class BaseServices
+    public interface IBaseServices
     {
-        protected internal IDbConnection _idbConnection;
-        protected internal IDbTransaction _idbTransaction;
+        void Initilize();
+        void Commit();
+        void Rollback();
+        void DisposeConnection();
+
+    }
+    public class BaseServices : IBaseServices
+    {
         protected internal string _connectionString;
         protected internal AdminSettings _adminSettings;
+        protected internal AppSettings _appSettings;
+        protected static internal IDbConnection _idbConnection;
+        protected static internal IDbTransaction _idbTransaction;
 
-        public BaseServices(IDbConnection sqlConnection, IDbTransaction dbTransaction)
+        public BaseServices()
         {
-            _idbConnection = sqlConnection;
-            _idbTransaction = dbTransaction;
             _adminSettings = ServiceActivator.GetScope().ServiceProvider.GetService<IOptions<AdminSettings>>().Value;
+            _appSettings = ServiceActivator.GetScope().ServiceProvider.GetService<IOptions<AppSettings>>().Value;
+            _connectionString = _appSettings.ConnectionString;
         }
 
-        //public BaseServices(string connectionString)
-        //{
-        //    _connectionString = connectionString;
-        //}
+        private void OpenConnection()
+        {
+            if (_idbConnection.State != ConnectionState.Open)
+                _idbConnection?.Open();
+        }
+        public void Initilize()
+        {
+            _idbConnection = _idbConnection ?? new SqlConnection(_connectionString);
+            OpenConnection();
+            _idbTransaction = _idbTransaction ?? _idbConnection.BeginTransaction();
+
+        }
+        public void Commit()
+        {
+            _idbTransaction?.Commit();
+
+        }
+        public void Rollback()
+        {
+            _idbTransaction?.Rollback();
+
+        }
+        public void DisposeConnection()
+        {
+            _idbConnection = null;
+            _idbTransaction = null;
+        }
+
     }
 }

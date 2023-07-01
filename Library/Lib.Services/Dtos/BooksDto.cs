@@ -22,7 +22,7 @@ namespace Lib.Services.Dtos
 
     public class AddUpdateBooksDto : BooksBaseDto
     {
-        
+        public IEnumerable<SelectListItemDto> Geners { get; set; }
     }
 
     public class BooksDto : BooksBaseDto

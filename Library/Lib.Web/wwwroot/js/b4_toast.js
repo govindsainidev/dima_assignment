@@ -73,10 +73,14 @@ var showToast = (title, text, type, placement) => {
 }
 
 var showWarningToast = (text) => {
+    if (typeof text === "undefined")
+        text = "Error! Oops Something wrong";
+
     showToast("Warning", text, toastType.danger, toastPlacementObj.bottom_right)
 }
 
 var showSuccessToast = (text) => {
+
     showToast("Success", text, toastType.success, toastPlacementObj.bottom_right)
 }
 

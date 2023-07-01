@@ -45,11 +45,11 @@
             ordering: false,
             filter: true,
             ajax: {
-                "url": "@Url.Action("GetPaging","Genere")",
+                "url": "@Url.Action("GetGenerePaging","Genere")",
                 "type": "POST",
                 "datatype": "json",
                 "error": function (jqXHR, textStatus, errorThrown) {
-                    if (!jqXHR.responseJSON.isSuccess)
+                    if (!jqXHR?.responseJSON?.isSuccess)
                         showWarningToast(jqXHR.responseJSON.message)
                 }
             },
@@ -109,7 +109,7 @@
                 })
                 .fail((jqXHR, res, d) => {
                     debugger
-                    if (!jqXHR.responseJSON.isSuccess)
+                    if (!jqXHR?.responseJSON?.isSuccess)
                         showWarningToast(jqXHR.responseJSON.message)
                 })
 
@@ -137,7 +137,7 @@
                         })
                         .fail((jqXHR, textStatus, errorThrown) => {
                             debugger;
-                            if (!jqXHR.responseJSON.isSuccess)
+                            if (!jqXHR?.responseJSON?.isSuccess)
                                 showWarningToast(jqXHR.responseJSON.message)
                         });
                 }

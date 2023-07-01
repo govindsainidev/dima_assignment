@@ -1,5 +1,6 @@
-﻿@model Lib.Services.Dtos.AddUpdateBooksDto
-
+﻿@using Lib.Services.Dtos;
+@model Lib.Services.Dtos.AddUpdateBooksDto
+@inject Lib.Services.IGenericMapper _mapper;
 @{
     Layout = null;
 }
@@ -27,6 +28,12 @@
                 @Html.LabelFor(s=>s.AuthorName,"Author Name", new {@class= "form-label"})
                 @Html.TextBoxFor(s=>s.AuthorName, htmlAttributes: new {@class= "form-control", placeholder="Enter Author Name"})
                 @Html.ValidationMessageFor(s => s.AuthorName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(s=>s.GenereId,"Genere",  htmlAttributes: new {@class= "form-label"})
+                @Html.DropDownListFor(s=>s.GenereId,(_mapper.Map<SelectListItem,SelectListItemDto>(Model.Geners)), htmlAttributes: new {@class= "form-control", placeholder="Enter Title"})
+                @Html.ValidationMessageFor(s => s.Title, "", new { @class = "text-danger" })
             </div>
 
         </div>

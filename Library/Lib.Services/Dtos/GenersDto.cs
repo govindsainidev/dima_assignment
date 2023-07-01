@@ -8,7 +8,7 @@ namespace Lib.Services.Dtos
 {
     public class GenersBaseDto
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         [Required]
         [DisplayName("Name")]
         public string Name { get; set; }
@@ -25,11 +25,6 @@ namespace Lib.Services.Dtos
 
     public class GenersDto : GenersBaseDto
     {
-        [DisplayName("Created At")]
-        public DateTime? CreatedAt { get; set; }
-        [DisplayName("Updated At")]
-        public DateTime? UpdatedAt { get; set; }
-        [DisplayName("Genere")]
-        public string Genere { get; set; }
+        
     }
 }

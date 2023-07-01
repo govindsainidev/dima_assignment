@@ -31,6 +31,8 @@ namespace Lib.Web
             services.AddControllersWithViews();
             services.AddDbContext<LibraryDbContext>(options => options.UseSqlServer(ConnectionString));
             services.AddSingleton<IGenericMapper, GenericMapper>();
+            services.AddScoped<IBooksServices, BooksServices>();
+            services.AddScoped<IGenersServices, GenersServices>();
             services.AddAuthorization();
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));

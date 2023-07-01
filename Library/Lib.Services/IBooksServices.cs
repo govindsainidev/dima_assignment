@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Lib.Services
 {
-    public interface IBooksServices : IDisposable
+    public interface IBooksServices : IBaseServices, IDisposable
     {
         public ServicesResponse<PagedResults<List<BooksDto>>> BookPaging(string search = "", int page = 1, int pageSize = 10);
         public ServicesResponse<PagedResults<List<BooksDto>>> BookPaging(DataTableRequest req);
@@ -27,15 +27,11 @@ namespace Lib.Services
 
     public class BooksServices : BaseServices, IBooksServices
     {
-        public BooksServices(IDbConnection sqlConnection, IDbTransaction dbTransaction) : base(sqlConnection, dbTransaction)
+
+        public BooksServices()
         {
-
+            Initilize();
         }
-
-        //public BooksServices(string connectionString) : base(connectionString)
-        //{
-
-        //}
 
         public ServicesResponse<PagedResults<List<BooksDto>>> BookPaging(DataTableRequest req)
         {
@@ -106,6 +102,8 @@ namespace Lib.Services
                 if (_adminSettings.IsUniqueBookName)
                 {
                     query = $@"SELECT Count(b.Title) FROM Books b WHERE TRIM(LOWER(b.Title)) = TRIM(LOWER('{req.Title}'))";
+                    if (!string.IsNullOrEmpty(req.Id?.ToString()))
+                        query = query + $" and Id !='{req.Id}'";
 
                     int model = _idbConnection.QueryFirstOrDefault<int>(query, transaction: _idbTransaction);
                     if (model > 0)
@@ -140,9 +138,12 @@ namespace Lib.Services
         {
             try
             {
+
                 string query = $@"SELECT * FROM Books WHERE Id = '{id}'";
                 BooksDto smodel = _idbConnection.QueryFirstOrDefault<BooksDto>(query, transaction: _idbTransaction);
+
                 return ServicesResponse<BooksDto>.Success(smodel);
+
 
             }
             catch (Exception ex)
@@ -170,6 +171,7 @@ namespace Lib.Services
         public void Dispose()
         {
             GC.SuppressFinalize(this);
+            DisposeConnection();
         }
 
 

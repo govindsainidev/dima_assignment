@@ -9,19 +9,16 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
 
-namespace Lib.Web.Controllers.Books
+namespace Lib.Web.Controllers.Genere
 {
-    public class BooksController : BaseController
+    public class GenereController : BaseController
     {
-        private readonly IBooksServices _bookSerivce;
         private readonly IGenersServices _genersServices;
 
-        public BooksController(IBooksServices bookSerivce, IGenersServices genersServices)
+        public GenereController(IGenersServices genersServices)
         {
-            _bookSerivce = bookSerivce;
             _genersServices = genersServices;
         }
 
@@ -32,86 +29,75 @@ namespace Lib.Web.Controllers.Books
         }
 
         [HttpGet]
-        [Route("GetBook/{id?}")]
-        public IActionResult GetBook(Guid? id)
+        [Route("GetGenere/{id?}")]
+        public IActionResult GetGenere(int? id)
         {
-            var result = _bookSerivce.GetBook(id ?? Guid.Empty);
+            var result = _genersServices.GetGenere(id ?? 0);
             if (result.IsSuccess)
             {
-                _bookSerivce.Commit();
-                AddUpdateBooksDto addDto = _mapper.Map<AddUpdateBooksDto, BooksDto>(result.Data);
-                addDto = addDto ?? new AddUpdateBooksDto();
-               
-                var gener = _genersServices.GetGeneres();
-                if (!gener.IsSuccess)
-                    return StatusCode(StatusCodes.Status500InternalServerError, gener);
-
-                addDto.Geners = gener.Data;
+                AddUpdateGenersDto addDto = _mapper.Map<AddUpdateGenersDto, GenersDto>(result.Data);
                 return PartialView("_AddUpdate", addDto);
             }
-            else { return BadRequest(result); }
+            else { return StatusCode(StatusCodes.Status500InternalServerError, result); }
         }
 
         [HttpGet]
-        [Route("GetDetailBook/{id}")]
-        public IActionResult GetDetailBook(Guid id)
+        [Route("GetDetailGenere/{id}")]
+        public IActionResult GetDetailGenere(int id)
         {
-            var result = _bookSerivce.GetBook(id);
+            var result = _genersServices.GetGenere(id);
             if (result.IsSuccess)
             {
                 return PartialView("_Detail", result.Data);
             }
             else { return StatusCode(StatusCodes.Status500InternalServerError, result); }
-
-
         }
 
         [HttpPost]
-        [Route("AddBook")]
+        [Route("AddGenere")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddBook(AddUpdateBooksDto reqDto)
+        public IActionResult AddGenere(AddUpdateGenersDto reqDto)
         {
             if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status500InternalServerError);
 
-            var result = _bookSerivce.AddUpdateBook(reqDto);
+            var result = _genersServices.AddUpdateGenere(reqDto);
             if (result.IsSuccess)
             {
-                _bookSerivce.Commit();
+                _genersServices.Commit();
                 return Ok(true);
             }
             else
             {
-                _bookSerivce.Rollback();
+                _genersServices.Rollback();
                 return StatusCode(StatusCodes.Status500InternalServerError, result);
             }
-
 
         }
 
         [HttpDelete]
-        [Route("DeleteBook/{id}")]
-        public IActionResult DeleteBook(Guid id)
+        [Route("DeleteGenere/{id}")]
+        public IActionResult DeleteGenere(int id)
         {
-            var result = _bookSerivce.DeleteBook(id);
+            var result = _genersServices.DeleteGenere(id);
             if (result.IsSuccess)
             {
-                _bookSerivce.Commit();
+                _genersServices.Commit();
                 return Ok(true);
             }
             else
             {
-                _bookSerivce.Rollback();
+                _genersServices.Rollback();
                 return StatusCode(StatusCodes.Status500InternalServerError, result);
             }
 
         }
 
         [HttpPost]
-        [Route("GetBookPaging")]
-        public IActionResult GetBookPaging([FromForm] DataTableRequest request)
+        [Route("GetGenerePaging")]
+        public IActionResult GetGenerePaging([FromForm] DataTableRequest request)
         {
-            var result = _bookSerivce.BookPaging(request);
+            var result = _genersServices.GenerePaging(request);
             if (result.IsSuccess)
             {
                 return Ok(new
@@ -124,6 +110,5 @@ namespace Lib.Web.Controllers.Books
             }
             else { return StatusCode(StatusCodes.Status500InternalServerError, result); }
         }
-
     }
 }

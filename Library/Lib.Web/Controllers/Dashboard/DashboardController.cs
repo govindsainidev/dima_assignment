@@ -6,7 +6,7 @@ namespace Lib.Web.Controllers.Dashboard
 {
     public class DashboardController : BaseController
     {
-        public DashboardController(IOptions<AppSettings> appSettings) : base(appSettings)
+        public DashboardController() 
         {
 
         }

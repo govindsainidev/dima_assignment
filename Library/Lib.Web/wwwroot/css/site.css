@@ -112,5 +112,24 @@
 }
 
 .card .dataTables_info, .card .dataTables_paginate, .card .dt-buttons, .card .dataTables_filter {
-    padding: 0 15px;
+    padding: 0 0px;
 }
+.card-header small {
+    display: inherit;
+    font-size: 13px;
+}
+
+.card-header {
+    line-height: 22px;
+}
+.menu-vertical .menu-inner > .menu-item .menu-link {
+    margin: 0px;
+    border-radius: 0 !important;
+    padding: 9px;
+}
+table.dataTable {
+    border: 1px solid #ddd !important
+}
+    table.dataTable thead th, table.dataTable thead td {
+        border-bottom: 1px solid #ddd !important
+    }

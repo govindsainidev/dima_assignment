@@ -6,7 +6,7 @@ namespace Lib.Web.Controllers.Subscribers
 {
     public class SubscribersController : BaseController
     {
-        public SubscribersController(IOptions<AppSettings> appSettings) : base(appSettings)
+        public SubscribersController() 
         {
 
         }

@@ -19,7 +19,8 @@ namespace Lib.Services
         public ServicesResponse<PagedResults<List<BooksDto>>> BookPaging(string search = "", int page = 1, int pageSize = 10);
         public ServicesResponse<PagedResults<List<BooksDto>>> BookPaging(DataTableRequest req);
 
-        public ServicesResponse<BooksDto> AddBook(AddBookDto req);
+        public ServicesResponse<BooksDto> AddBook(AddUpdateBooksDto req);
+        public ServicesResponse<BooksDto> GetBook(Guid id);
     }
 
     public class BooksServices : BaseServices, IBooksServices
@@ -132,7 +133,7 @@ namespace Lib.Services
             }
         }
 
-        public ServicesResponse<BooksDto> AddBook(AddBookDto req)
+        public ServicesResponse<BooksDto> AddBook(AddUpdateBooksDto req)
         {
             try
             {
@@ -151,13 +152,7 @@ namespace Lib.Services
 
                 var added = _idbConnection.QuerySingle<Guid>(query, req, _idbTransaction);
 
-                query = $@"SELECT * FROM Books WHERE Id = '{added}'";
-
-                BooksDto smodel = _idbConnection.QueryFirstOrDefault<BooksDto>(query, transaction: _idbTransaction);
-
-                return ServicesResponse<BooksDto>.Success(new BooksDto());
-
-
+                return GetBook(added);
 
             }
             catch (Exception ex)
@@ -165,6 +160,22 @@ namespace Lib.Services
                 return ServicesResponse<BooksDto>.Error(ex.GetActualError());
             }
         }
+
+        public ServicesResponse<BooksDto> GetBook(Guid id)
+        {
+            try
+            {
+                string query = $@"SELECT * FROM Books WHERE Id = '{id}'";
+                BooksDto smodel = _idbConnection.QueryFirstOrDefault<BooksDto>(query, transaction: _idbTransaction);
+                return ServicesResponse<BooksDto>.Success(smodel);
+
+            }
+            catch (Exception ex)
+            {
+                return ServicesResponse<BooksDto>.Error(ex.GetActualError());
+            }
+        }
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);

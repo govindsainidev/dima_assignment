@@ -19,9 +19,58 @@ namespace Lib.Web.Controllers.Books
         {
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpGet]
+        [Route("GetBook/{id}")]
+        public IActionResult GetBook(Guid id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                IDbTransaction transaction = connection.BeginTransaction();
+                using (IBooksServices bookSerivce = new BooksServices(connection, transaction))
+                {
+                    var result = bookSerivce.GetBook(id);
+                    if (result.IsSuccess)
+                    {
+                        AddUpdateBooksDto addDto = _mapper.Map<AddUpdateBooksDto, BooksDto>(result.Data);
+                        return PartialView("_AddUpdate", addDto);
+                    }
+                    else { return BadRequest(result); }
+
+                }
+            }
+        }
+
+        [HttpPost]
+        [Route("AddBook")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddBook(AddUpdateBooksDto reqDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(false);
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                IDbTransaction transaction = connection.BeginTransaction();
+                using (IBooksServices bookSerivce = new BooksServices(connection, transaction))
+                {
+                    var result = bookSerivce.AddBook(reqDto);
+                    if (result.IsSuccess)
+                    {
+                        return Ok(true);
+                    }
+                    else { return BadRequest(result); }
+
+                }
+            }
+
         }
 
         [HttpPost]

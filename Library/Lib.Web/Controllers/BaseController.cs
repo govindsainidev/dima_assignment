@@ -10,11 +10,13 @@ namespace Lib.Web.Controllers
     {
         public static AppSettings _appSettings;
         public static AdminSettings _adminSettings;
+        public static IGenericMapper _mapper;
         protected internal string _connectionString;
         public BaseController()
         {
-            
-            _adminSettings = ServiceActivator.GetScope().ServiceProvider.GetService<IOptions<AdminSettings>>().Value;
+
+            _mapper = ServiceActivator.GetScope().ServiceProvider.GetService<IGenericMapper>();
+            _appSettings = ServiceActivator.GetScope().ServiceProvider.GetService<IOptions<AppSettings>>().Value;
             _appSettings = ServiceActivator.GetScope().ServiceProvider.GetService<IOptions<AppSettings>>().Value;
             _connectionString = _appSettings.ConnectionString;
         }

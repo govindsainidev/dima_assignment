@@ -1,0 +1,41 @@
+﻿@model Lib.Services.Dtos.AddUpdateBooksDto
+
+@{
+    Layout = null;
+}
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="modalCenterTitle">Add book</h5>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"></button>
+    </div>
+    <form id="addBookForm" method="post" action="/AddBook" onsubmit="onBookSubmit(this,event)">
+    
+        @Html.AntiForgeryToken()
+        <div class="modal-body" id="modalCenterBody">
+            <div class="mb-3">
+                @Html.LabelFor(s=>s.Title,"Title",  htmlAttributes: new {@class= "form-label"})
+                @Html.TextBoxFor(s=>s.Title, htmlAttributes: new {@class= "form-control", placeholder="Enter Title"})
+                @Html.ValidationMessageFor(s => s.Title, "", new { @class = "text-danger" })
+            </div>
+           
+            <div class="mb-3">
+                @Html.LabelFor(s=>s.AuthorName,"Author Name", new {@class= "form-label"})
+                @Html.TextBoxFor(s=>s.AuthorName, htmlAttributes: new {@class= "form-control", placeholder="Enter Author Name"})
+                @Html.ValidationMessageFor(s => s.AuthorName, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                Close
+            </button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+    </form>
+</div>
+

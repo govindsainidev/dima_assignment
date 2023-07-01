@@ -53,7 +53,6 @@ namespace Lib.Services
         /// <returns>void</returns>
         void MapBind<TResult, TSource>(IEnumerable<TSource> entites, out IEnumerable<TResult> result, Action<TResult> action = null) where TResult : new();
     }
-
     public class GenericMapper : IGenericMapper
     {
 
@@ -279,7 +278,6 @@ namespace Lib.Services
 
         #endregion
     }
-
     public class MapperConfig
     {
         public bool DisableSelfRef { get; set; }

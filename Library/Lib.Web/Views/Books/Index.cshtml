@@ -24,6 +24,8 @@
     Launch modal
 </button>
 @section scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#customerDatatable').dataTable({
@@ -35,7 +37,7 @@
                         attr: { id: 'addnewbookBtn' },
                         className: "btn btn-outline-primary",
                         action: function (e, dt, node, config) {
-                           
+
                         },
                         init: function (api, node, config) {
                             $(node).removeClass('dt-button').prepend('<span class="tf-icons bx bx-book-add"></span> ')
@@ -43,11 +45,11 @@
                         }
                     }
                 ],
-                "processing": true,
-                "serverSide": true,
-                "ordering": false,
-                "filter": true,
-                "ajax": {
+                processing: true,
+                serverSide: true,
+                ordering: false,
+                filter: true,
+                ajax: {
                     "url": "@Url.Action("GetPaging","Books")",
                     "type": "POST",
                     "datatype": "json",
@@ -56,7 +58,7 @@
                             showWarningToast(jqXHR.responseJSON.message)
                     }
                 },
-                "columns": [
+                columns: [
                     { "data": "title", "autoWidth": true },
                     { "data": "authorName", "autoWidth": true },
                     { "data": "genere", "autoWidth": true },
@@ -76,14 +78,65 @@
                         "render":
                             function (data, row) {
                                 return `<button onclick=onBookEdit(this,'` + data + `') type="button" class="btn-sm btn btn-icon btn-outline-secondary">
-                              <span class="tf-icons bx bx-edit"></span>
-                            </button>`; }
+                                                              <span class="tf-icons bx bx-edit"></span>
+                                                            </button>`;
+                            }
                     },
                 ]
             });
         });
-        var onBookEdit = (elm,id) => {
-            debugger;
+        var onBookEdit = (elm, id) => {
+            $('#modelCenterDynamicContent').load("/GetBook/" + id, () => {
+                $("#modalCenter").modal("show");
+                setTimeout(() => {
+                    $form = $("#modalCenter form")[0];
+                    $.validator.unobtrusive.parse($form)
+                }, 1000)
+            });
+
+            //$.get("/GetBook/" + id, (data) => {
+            //    debugger;
+            //    let bodyContainer = document.querySelector("#modelCenterDynamicContent");
+            //    if (typeof bodyContainer === "undefined")
+            //        showWarningToast("Error! #modelCenterDynamicContent: element not found!");
+
+            //    bodyContainer.innerHTML = data;
+
+            //})
+            //.done(() => {
+            //    // to do after success
+            //})
+            //.fail((jqXHR, textStatus, errorThrown) => {
+            //        showWarningToast(jqXHR.responseJSON.message)
+            //});
+
+            //$("#modalCenter").modal("show");
         }
+
+        var onBookSubmit = (elm, e) => {
+            debugger;
+            e.preventDefault();
+            var $form = $(elm);
+
+            $.post($form.attr("action"), $form.serialize())
+                .done((dt, status, req) => {
+                    debugger;
+
+                })
+                .fail((jwtEr, res, d) => {
+                    debugger;
+
+                    //ModelState is invalid
+                    //do your stuff..
+                    alert(res.statusText);
+                })
+
+
+        }
+                                
     </script>
+
+
 }
+
+

@@ -26,8 +26,8 @@ namespace Lib.Web.Controllers.Books
         }
 
         [HttpGet]
-        [Route("GetBook/{id}")]
-        public IActionResult GetBook(Guid id)
+        [Route("GetBook/{id?}")]
+        public IActionResult GetBook(Guid? id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -35,7 +35,7 @@ namespace Lib.Web.Controllers.Books
                 IDbTransaction transaction = connection.BeginTransaction();
                 using (IBooksServices bookSerivce = new BooksServices(connection, transaction))
                 {
-                    var result = bookSerivce.GetBook(id);
+                    var result = bookSerivce.GetBook(id ?? Guid.Empty);
                     if (result.IsSuccess)
                     {
                         AddUpdateBooksDto addDto = _mapper.Map<AddUpdateBooksDto, BooksDto>(result.Data);
@@ -61,12 +61,44 @@ namespace Lib.Web.Controllers.Books
                 IDbTransaction transaction = connection.BeginTransaction();
                 using (IBooksServices bookSerivce = new BooksServices(connection, transaction))
                 {
-                    var result = bookSerivce.AddBook(reqDto);
+                    var result = bookSerivce.AddUpdateBook(reqDto);
                     if (result.IsSuccess)
                     {
+                        transaction.Commit();
                         return Ok(true);
                     }
-                    else { return BadRequest(result); }
+                    else
+                    {
+                        transaction.Rollback();
+                        return BadRequest(result);
+                    }
+
+                }
+            }
+
+        }
+
+        [HttpDelete]
+        [Route("DeleteBook")]
+        public IActionResult DeleteBook(Guid Id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                IDbTransaction transaction = connection.BeginTransaction();
+                using (IBooksServices bookSerivce = new BooksServices(connection, transaction))
+                {
+                    var result = bookSerivce.DeleteBook(Id);
+                    if (result.IsSuccess)
+                    {
+                        transaction.Commit();
+                        return Ok(true);
+                    }
+                    else
+                    {
+                        transaction.Rollback();
+                        return BadRequest(result);
+                    }
 
                 }
             }
@@ -77,7 +109,6 @@ namespace Lib.Web.Controllers.Books
         [Route("GetPaging")]
         public IActionResult GetPaging([FromForm] DataTableRequest request)
         {
-
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();

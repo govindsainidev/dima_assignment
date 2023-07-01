@@ -7,7 +7,7 @@ namespace Lib.Services.Dtos
 {
     public class BooksBaseDto
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]
@@ -18,8 +18,7 @@ namespace Lib.Services.Dtos
 
     public class AddUpdateBooksDto : BooksBaseDto
     {
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        
     }
 
     public class BooksDto : BooksBaseDto

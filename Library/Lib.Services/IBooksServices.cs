@@ -3,6 +3,7 @@ using Lib.Services.Core;
 using Lib.Services.Dtos;
 using Lib.Services.Paging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,8 +20,9 @@ namespace Lib.Services
         public ServicesResponse<PagedResults<List<BooksDto>>> BookPaging(string search = "", int page = 1, int pageSize = 10);
         public ServicesResponse<PagedResults<List<BooksDto>>> BookPaging(DataTableRequest req);
 
-        public ServicesResponse<BooksDto> AddBook(AddUpdateBooksDto req);
+        public ServicesResponse<BooksDto> AddUpdateBook(AddUpdateBooksDto req);
         public ServicesResponse<BooksDto> GetBook(Guid id);
+        public ServicesResponse<bool> DeleteBook(Guid id);
     }
 
     public class BooksServices : BaseServices, IBooksServices
@@ -68,7 +70,7 @@ namespace Lib.Services
                             SELECT  b.*, ge.Name as Genere,ge.Id as GenereId FROM Books b
                             LEFT JOIN Geners ge ON b.GenereId = ge.Id 
                             {whereClause}
-                            ORDER BY b.UpdatedAt
+                            ORDER BY b.UpdatedAt desc
                             OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY";
 
                 var reader = _idbConnection.QueryMultiple(query, new { Skip = skip, Take = take }, _idbTransaction);
@@ -133,11 +135,15 @@ namespace Lib.Services
             }
         }
 
-        public ServicesResponse<BooksDto> AddBook(AddUpdateBooksDto req)
+        public ServicesResponse<BooksDto> AddUpdateBook(AddUpdateBooksDto req)
         {
             try
             {
+                var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(req));
+                data.Add("CreatedAt", DateTime.UtcNow);
+                data.Add("UpdatedAt", DateTime.UtcNow);
                 string query = string.Empty;
+                Guid entityId;
                 if (_adminSettings.IsUniqueBookName)
                 {
                     query = $@"SELECT Count(b.Title) FROM Books b WHERE TRIM(LOWER(b.Title)) = TRIM(LOWER('{req.Title}'))";
@@ -147,12 +153,21 @@ namespace Lib.Services
                         return ServicesResponse<BooksDto>.Error($"{req.Title} Book name already exist");
                 }
 
-                query = $@"INSERT INTO Books (Title, AuthorName,GenereId, CreatedAt, UpdatedAt) OUTPUT INSERTED.Id VALUES 
+                if (string.IsNullOrEmpty(req.Id?.ToString()))
+                {
+                    query = $@"INSERT INTO Books (Title, AuthorName,GenereId, CreatedAt, UpdatedAt) OUTPUT INSERTED.Id VALUES 
                                   (@Title, @AuthorName,@GenereId, @CreatedAt, @UpdatedAt)";
+                    
+                }
+                else
+                {
+                    query = $@"update Books SET Title=@Title, AuthorName=@AuthorName,GenereId=@GenereId, UpdatedAt=@UpdatedAt 
+                                WHERE Id = '{req.Id}'";
+                    
+                }
 
-                var added = _idbConnection.QuerySingle<Guid>(query, req, _idbTransaction);
-
-                return GetBook(added);
+                entityId = _idbConnection.QuerySingle<Guid>(query, data, _idbTransaction);
+                return GetBook(entityId);
 
             }
             catch (Exception ex)
@@ -176,6 +191,20 @@ namespace Lib.Services
             }
         }
 
+        public ServicesResponse<bool> DeleteBook(Guid id)
+        {
+            try
+            {
+                string query = $@"DELETE FROM Books WHERE Id = '{id}'";
+                var smodel = _idbConnection.Execute(query, transaction: _idbTransaction);
+                return ServicesResponse<bool>.Success(smodel>0);
+
+            }
+            catch (Exception ex)
+            {
+                return ServicesResponse<bool>.Error(ex.GetActualError());
+            }
+        }
         public void Dispose()
         {
             GC.SuppressFinalize(this);

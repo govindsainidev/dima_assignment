@@ -15,6 +15,7 @@
     <form id="addBookForm" method="post" action="/AddBook" onsubmit="onBookSubmit(this,event)">
     
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(s => s.Id)
         <div class="modal-body" id="modalCenterBody">
             <div class="mb-3">
                 @Html.LabelFor(s=>s.Title,"Title",  htmlAttributes: new {@class= "form-label"})

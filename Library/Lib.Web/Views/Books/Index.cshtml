@@ -17,123 +17,105 @@
     </div>
 </div>
 
-<button type="button"
-        class="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#modalCenter">
-    Launch modal
-</button>
+
 @section scripts {
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+
     <script>
-        $(document).ready(function () {
-            $('#customerDatatable').dataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        text: 'Add Book',
-                        titleAttr: 'Add new book',
-                        attr: { id: 'addnewbookBtn' },
-                        className: "btn btn-outline-primary",
-                        action: function (e, dt, node, config) {
 
-                        },
-                        init: function (api, node, config) {
-                            $(node).removeClass('dt-button').prepend('<span class="tf-icons bx bx-book-add"></span> ')
-                            //$('span', node).addClass('tf-icons bx bx-folder-plus').html('');
-                        }
+        var $table = $('#customerDatatable').dataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    text: 'Add Book',
+                    titleAttr: 'Add new book',
+                    attr: { id: 'addnewbookBtn' },
+                    className: "btn btn-outline-primary",
+                    action: function (e, dt, node, config) {
+                        debugger;
+                        onAddUpdateBook(e.currentTarget,'');
+                        
+                    },
+                    init: function (api, node, config) {
+                        $(node).removeClass('dt-button').prepend('<span class="tf-icons bx bx-book-add"></span> ')
+                        //$('span', node).addClass('tf-icons bx bx-folder-plus').html('');
                     }
-                ],
-                processing: true,
-                serverSide: true,
-                ordering: false,
-                filter: true,
-                ajax: {
-                    "url": "@Url.Action("GetPaging","Books")",
-                    "type": "POST",
-                    "datatype": "json",
-                    "error": function (jqXHR, textStatus, errorThrown) {
-                        if (!jqXHR.responseJSON.isSuccess)
-                            showWarningToast(jqXHR.responseJSON.message)
-                    }
+                }
+            ],
+            processing: true,
+            serverSide: true,
+            ordering: false,
+            filter: true,
+            ajax: {
+                "url": "@Url.Action("GetPaging","Books")",
+                "type": "POST",
+                "datatype": "json",
+                "error": function (jqXHR, textStatus, errorThrown) {
+                    if (!jqXHR.responseJSON.isSuccess)
+                        showWarningToast(jqXHR.responseJSON.message)
+                }
+            },
+            columns: [
+                { "data": "title", "autoWidth": true },
+                { "data": "authorName", "autoWidth": true },
+                { "data": "genere", "autoWidth": true },
+                {
+                    "data": "createdAt", "autoWidth": true, "render": function (data) {
+                        var date = new Date(data);
+                        var month = date.getMonth() + 1;
+                        var day = date.getDate();
+                        return date.getFullYear() + "/"
+                            + (month.length > 1 ? month : "0" + month) + "/"
+                            + ("0" + day).slice(-2);
+                        //return date format like 2000/01/01;
+                    },
                 },
-                columns: [
-                    { "data": "title", "autoWidth": true },
-                    { "data": "authorName", "autoWidth": true },
-                    { "data": "genere", "autoWidth": true },
-                    {
-                        "data": "createdAt", "autoWidth": true, "render": function (data) {
-                            var date = new Date(data);
-                            var month = date.getMonth() + 1;
-                            var day = date.getDate();
-                            return date.getFullYear() + "/"
-                                + (month.length > 1 ? month : "0" + month) + "/"
-                                + ("0" + day).slice(-2);
-                            //return date format like 2000/01/01;
-                        },
-                    },
-                    {
-                        "data": "id", "autoWidth": true,
-                        "render":
-                            function (data, row) {
-                                return `<button onclick=onBookEdit(this,'` + data + `') type="button" class="btn-sm btn btn-icon btn-outline-secondary">
-                                                              <span class="tf-icons bx bx-edit"></span>
-                                                            </button>`;
-                            }
-                    },
-                ]
-            });
+                {
+                    "data": "id", "autoWidth": true,
+                    "render":
+                        function (data, row) {
+                            return `<button onclick=onAddUpdateBook(this,'` + data + `') type="button" class="btn-sm btn btn-icon btn-outline-secondary">
+                                                                              <span class="tf-icons bx bx-edit"></span>
+                                                                            </button>`;
+                        }
+                },
+            ]
         });
-        var onBookEdit = (elm, id) => {
-            $('#modelCenterDynamicContent').load("/GetBook/" + id, () => {
-                $("#modalCenter").modal("show");
-                setTimeout(() => {
-                    $form = $("#modalCenter form")[0];
-                    $.validator.unobtrusive.parse($form)
-                }, 1000)
+
+        var onAddUpdateBook = (elm, id) => {
+            $('#modelCenterDynamicContent').load("/GetBook/" + id, (response, status, xhr) => {
+                if (xhr.status != 200) {
+                    showWarningToast(JSON.parse(response).message);
+                }
+                else {
+                    $("#modalCenter").modal("show");
+                    setTimeout(() => {
+                        $form = $("#modalCenter form")[0];
+                        $.validator.unobtrusive.parse($form)
+                    }, 1000)
+                }
+
             });
-
-            //$.get("/GetBook/" + id, (data) => {
-            //    debugger;
-            //    let bodyContainer = document.querySelector("#modelCenterDynamicContent");
-            //    if (typeof bodyContainer === "undefined")
-            //        showWarningToast("Error! #modelCenterDynamicContent: element not found!");
-
-            //    bodyContainer.innerHTML = data;
-
-            //})
-            //.done(() => {
-            //    // to do after success
-            //})
-            //.fail((jqXHR, textStatus, errorThrown) => {
-            //        showWarningToast(jqXHR.responseJSON.message)
-            //});
-
-            //$("#modalCenter").modal("show");
         }
 
         var onBookSubmit = (elm, e) => {
-            debugger;
             e.preventDefault();
             var $form = $(elm);
 
             $.post($form.attr("action"), $form.serialize())
                 .done((dt, status, req) => {
                     debugger;
-
+                    $table.api().ajax.reload(null, false);
+                    $("#modalCenter").modal("hide");
                 })
                 .fail((jwtEr, res, d) => {
-                    debugger;
 
-                    //ModelState is invalid
-                    //do your stuff..
-                    alert(res.statusText);
                 })
 
 
         }
-                                
+
+
     </script>
 
 

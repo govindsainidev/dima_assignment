@@ -47,6 +47,27 @@ namespace Lib.Web.Controllers.Books
             }
         }
 
+        [HttpGet]
+        [Route("GetDetailBook/{id}")]
+        public IActionResult GetDetailBook(Guid id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                IDbTransaction transaction = connection.BeginTransaction();
+                using (IBooksServices bookSerivce = new BooksServices(connection, transaction))
+                {
+                    var result = bookSerivce.GetBook(id);
+                    if (result.IsSuccess)
+                    {
+                        return PartialView("_Detail", result.Data);
+                    }
+                    else { return BadRequest(result); }
+
+                }
+            }
+        }
+
         [HttpPost]
         [Route("AddBook")]
         [ValidateAntiForgeryToken]
@@ -79,8 +100,8 @@ namespace Lib.Web.Controllers.Books
         }
 
         [HttpDelete]
-        [Route("DeleteBook")]
-        public IActionResult DeleteBook(Guid Id)
+        [Route("DeleteBook/{id}")]
+        public IActionResult DeleteBook(Guid id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -88,7 +109,7 @@ namespace Lib.Web.Controllers.Books
                 IDbTransaction transaction = connection.BeginTransaction();
                 using (IBooksServices bookSerivce = new BooksServices(connection, transaction))
                 {
-                    var result = bookSerivce.DeleteBook(Id);
+                    var result = bookSerivce.DeleteBook(id);
                     if (result.IsSuccess)
                     {
                         transaction.Commit();

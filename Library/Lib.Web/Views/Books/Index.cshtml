@@ -33,8 +33,8 @@
                     className: "btn btn-outline-primary",
                     action: function (e, dt, node, config) {
                         debugger;
-                        onAddUpdateBook(e.currentTarget,'');
-                        
+                        onAddUpdateBook(e.currentTarget, '');
+
                     },
                     init: function (api, node, config) {
                         $(node).removeClass('dt-button').prepend('<span class="tf-icons bx bx-book-add"></span> ')
@@ -74,9 +74,22 @@
                     "data": "id", "autoWidth": true,
                     "render":
                         function (data, row) {
-                            return `<button onclick=onAddUpdateBook(this,'` + data + `') type="button" class="btn-sm btn btn-icon btn-outline-secondary">
-                                                                              <span class="tf-icons bx bx-edit"></span>
-                                                                            </button>`;
+                            return `
+                                    <button onclick=onAddUpdateBook(this,'` + data + `')
+                                         type="button" class="btn-sm btn btn-icon btn-outline-primary">
+                                         <span class="tf-icons bx bx-edit"></span>
+                                    </button>
+
+                                    <button onclick=onDetailBook(this,'` + data + `')
+                                        type="button" class="btn-sm btn btn-icon btn-outline-info">
+                                        <span class="tf-icons bx bx-eye"></span>
+                                    </button>
+
+                                    <button onclick=onDeleteBook(this,'` + data + `')
+                                        type="button" class="btn-sm btn btn-icon btn-outline-danger">
+                                        <span class="tf-icons bx bx-trash"></span>
+                                    </button>
+                                           `;
                         }
                 },
             ]
@@ -115,7 +128,36 @@
 
         }
 
+        var onDeleteBook = (elm, id) => {
+            $.ajax({
+                type: "DELETE",
+                url: "/DeleteBook/" + id
+            })
+                .done((data) => {
+                    $table.api().ajax.reload(null, false);
+                })
+                .fail((jqXHR, textStatus, errorThrown) => {
+                    debugger;
+                    if (!jqXHR.responseJSON.isSuccess)
+                        showWarningToast(jqXHR.responseJSON.message)
+                });
+        }
 
+        var onDetailBook = (elm, id) => {
+            $('#modelCenterDynamicContent').load("/GetDetailBook/" + id, (response, status, xhr) => {
+                if (xhr.status != 200) {
+                    showWarningToast(JSON.parse(response).message);
+                }
+                else {
+                    $("#modalCenter").modal("show");
+                    setTimeout(() => {
+                        $form = $("#modalCenter form")[0];
+                        $.validator.unobtrusive.parse($form)
+                    }, 1000)
+                }
+
+            });
+        }
     </script>
 
 

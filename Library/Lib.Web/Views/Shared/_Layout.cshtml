@@ -25,11 +25,11 @@
     <!-- Core CSS -->
     <link href="~/css/core.css" rel="stylesheet" class="template-customizer-core-css" />
     <link href="~/css/theme-default.css" rel="stylesheet" class="template-customizer-theme-css" />
-    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/lib/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
     <link href="~/lib/datatables/css/datatables.min.css" rel="stylesheet" />
     <link href="~/lib/datatables/css/datatables.bootstrap4.min.css" rel="stylesheet" />
-
+    <link href="~/css/site.css" rel="stylesheet" />
     <!-- Vendors CSS -->
     <link href="~/lib/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" />
 
@@ -79,6 +79,11 @@
                         <ul class="menu-sub">
                             <li class="menu-item">
                                 <a href="@Url.Action("Index","Subscribers")" class="menu-link">
+                                    <div data-i18n="Without menu">Subscribers</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="@Url.Action("Index","Genere")" class="menu-link">
                                     <div data-i18n="Without menu">Subscribers</div>
                                 </a>
                             </li>
@@ -181,7 +186,7 @@
     <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
     <script src="~/lib/datatables/js/datatables.bootstrap4.min.js"></script>
     <script src="~/lib/datatables/js/datatables.buttons.min.js"></script>
-    
+    <script src="~/lib/sweet-alert2/sweetalert2.all.min.js"></script>
 
     <script src="~/js/menu.js"></script>
     <!-- endbuild -->

@@ -39,61 +39,20 @@ namespace Lib.Services
 
         public ServicesResponse<PagedResults<List<BooksDto>>> BookPaging(DataTableRequest req)
         {
-            try
-            {
-                string searchValue = req?.search?.value ?? "";
-                int pageSize = Convert.ToInt32(req.length);
-                int page = Convert.ToInt32(req.start) / pageSize + 1;
-                
-                int skip = (page - 1) * pageSize;
-                int take = pageSize;
 
-                string whereClause = "";
-                if (!string.IsNullOrEmpty(searchValue))
-                {
-                    whereClause = $@" where TRIM(LOWER(b.Title)) LIKE TRIM(LOWER('{searchValue}'))+'%' and TRIM(LOWER(b.AuthorName)) LIKE TRIM(LOWER('{searchValue}'))+'%'";
-                }
+            string searchValue = req?.search?.value ?? "";
+            int pageSize = Convert.ToInt32(req.length);
+            int page = Convert.ToInt32(req.start) / pageSize + 1;
 
-                //string orderBy = "";
-                //if (req.order?.Count>0)
-                //{
-                //    var orderByColumn = req.columns[req.order[0].column];
-                //    orderBy = $@" ORDER BY b.{orderByColumn.data} {req.order[0].dir}";
-                //}
+            return BookPaging(searchValue, page, pageSize);
 
-                string query = $@"SELECT 
-                            COUNT(*)
-                            FROM Books b
-                            LEFT JOIN Geners ge ON b.GenereId = ge.Id 
-                            {whereClause}
- 
-                            SELECT  b.*, ge.Name as Genere,ge.Id as GenereId FROM Books b
-                            LEFT JOIN Geners ge ON b.GenereId = ge.Id 
-                            {whereClause}
-                            ORDER BY b.UpdatedAt desc
-                            OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY";
-
-                var reader = _idbConnection.QueryMultiple(query, new { Skip = skip, Take = take }, _idbTransaction);
-
-                int count = reader.Read<int>().FirstOrDefault();
-                List<BooksDto> allTodos = reader.Read<BooksDto>().ToList();
-
-                return ServicesResponse<PagedResults<List<BooksDto>>>.Success(new PagedResults<List<BooksDto>>(allTodos, count, page, pageSize));
-
-
-
-            }
-            catch (Exception ex)
-            {
-                return ServicesResponse<PagedResults<List<BooksDto>>>.Error(ex.GetActualError());
-            }
         }
 
         public ServicesResponse<PagedResults<List<BooksDto>>> BookPaging(string search, int page = 1, int pageSize = 10)
         {
             try
             {
-                
+
                 int maxPagSize = 50;
                 pageSize = (pageSize > 0 && pageSize <= maxPagSize) ? pageSize : maxPagSize;
 
@@ -115,7 +74,7 @@ namespace Lib.Services
                             LEFT JOIN Geners ge ON b.GenereId = ge.Id 
                             {whereClause}
 
-                            ORDER BY b.UpdatedAt
+                            ORDER BY b.UpdatedAt desc
                             OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY";
 
 
@@ -149,7 +108,7 @@ namespace Lib.Services
                     query = $@"SELECT Count(b.Title) FROM Books b WHERE TRIM(LOWER(b.Title)) = TRIM(LOWER('{req.Title}'))";
 
                     int model = _idbConnection.QueryFirstOrDefault<int>(query, transaction: _idbTransaction);
-                    if (model>0)
+                    if (model > 0)
                         return ServicesResponse<BooksDto>.Error($"{req.Title} Book name already exist");
                 }
 
@@ -157,16 +116,17 @@ namespace Lib.Services
                 {
                     query = $@"INSERT INTO Books (Title, AuthorName,GenereId, CreatedAt, UpdatedAt) OUTPUT INSERTED.Id VALUES 
                                   (@Title, @AuthorName,@GenereId, @CreatedAt, @UpdatedAt)";
-                    
+                    entityId = _idbConnection.QuerySingle<Guid>(query, data, _idbTransaction);
                 }
                 else
                 {
                     query = $@"update Books SET Title=@Title, AuthorName=@AuthorName,GenereId=@GenereId, UpdatedAt=@UpdatedAt 
                                 WHERE Id = '{req.Id}'";
-                    
+
+                    int rowsAffected = _idbConnection.Execute(query, data, _idbTransaction);
+                    entityId = req.Id.Value;
                 }
 
-                entityId = _idbConnection.QuerySingle<Guid>(query, data, _idbTransaction);
                 return GetBook(entityId);
 
             }
@@ -197,7 +157,7 @@ namespace Lib.Services
             {
                 string query = $@"DELETE FROM Books WHERE Id = '{id}'";
                 var smodel = _idbConnection.Execute(query, transaction: _idbTransaction);
-                return ServicesResponse<bool>.Success(smodel>0);
+                return ServicesResponse<bool>.Success(smodel > 0);
 
             }
             catch (Exception ex)
@@ -205,9 +165,13 @@ namespace Lib.Services
                 return ServicesResponse<bool>.Error(ex.GetActualError());
             }
         }
+
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);
         }
+
+
     }
 }

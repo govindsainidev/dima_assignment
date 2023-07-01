@@ -1,15 +1,13 @@
 ﻿
 
 <div class="card">
-    <h5 class="card-header">Books <small>Listing all library books</small></h5>
+    <h5 class="card-header">Geners <small>Listing all geners</small></h5>
     <div class="card-body">
-        <table id="customerDatatable" class="table table-striped table-bordered" width="100%" cellspacing="0">
+        <table id="genereDatatable" class="table table-striped table-bordered" width="100%" cellspacing="0">
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Author Name</th>
-                    <th>Genere</th>
-                    <th>Created At</th>
+                    <th>Name</th>
+                    <th>Description</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -23,21 +21,21 @@
 
     <script>
 
-        var $table = $('#customerDatatable').dataTable({
+        var $table = $('#genereDatatable').dataTable({
             dom: 'Bfrtip',
             buttons: [
                 {
-                    text: 'Add Book',
-                    titleAttr: 'Add new book',
-                    attr: { id: 'addnewbookBtn' },
+                    text: 'Add Genere',
+                    titleAttr: 'Add new genere',
+                    attr: { id: 'addnewgenereBtn' },
                     className: "btn btn-outline-primary",
                     action: function (e, dt, node, config) {
                         debugger;
-                        onAddUpdateBook(e.currentTarget, '');
+                        onAddUpdateGenere(e.currentTarget, '');
 
                     },
                     init: function (api, node, config) {
-                        $(node).removeClass('dt-button').prepend('<span class="tf-icons bx bx-book-add"></span> ')
+                        $(node).removeClass('dt-button').prepend('<span class="tf-icons bx bx-color"></span> ')
                         //$('span', node).addClass('tf-icons bx bx-folder-plus').html('');
                     }
                 }
@@ -47,7 +45,7 @@
             ordering: false,
             filter: true,
             ajax: {
-                "url": "@Url.Action("GetPaging","Books")",
+                "url": "@Url.Action("GetPaging","Genere")",
                 "type": "POST",
                 "datatype": "json",
                 "error": function (jqXHR, textStatus, errorThrown) {
@@ -56,36 +54,24 @@
                 }
             },
             columns: [
-                { "data": "title", "autoWidth": true },
-                { "data": "authorName", "autoWidth": true },
-                { "data": "genere", "autoWidth": true },
-                {
-                    "data": "createdAt", "autoWidth": true, "render": function (data) {
-                        var date = new Date(data);
-                        var month = date.getMonth() + 1;
-                        var day = date.getDate();
-                        return date.getFullYear() + "/"
-                            + (month.length > 1 ? month : "0" + month) + "/"
-                            + ("0" + day).slice(-2);
-                        //return date format like 2000/01/01;
-                    },
-                },
+                { "data": "name", "autoWidth": true },
+                { "data": "description", "autoWidth": true },
                 {
                     "data": "id", "autoWidth": true,
                     "render":
                         function (data, row) {
                             return `
-                                            <button onclick=onAddUpdateBook(this,'` + data + `')
+                                            <button onclick=onAddUpdateGenere(this,'` + data + `')
                                                  type="button" class="btn-sm btn btn-icon btn-outline-primary">
                                                  <span class="tf-icons bx bx-edit"></span>
                                             </button>
 
-                                            <button onclick=onDetailBook(this,'` + data + `')
+                                                    <button onclick=onDetailGenere(this,'` + data + `')
                                                 type="button" class="btn-sm btn btn-icon btn-outline-info">
                                                 <span class="tf-icons bx bx-eye"></span>
                                             </button>
 
-                                            <button onclick=onDeleteBook(this,'` + data + `')
+                                                    <button onclick=onDeleteGenere(this,'` + data + `')
                                                 type="button" class="btn-sm btn btn-icon btn-outline-danger">
                                                 <span class="tf-icons bx bx-trash"></span>
                                             </button>
@@ -95,8 +81,8 @@
             ]
         });
 
-        var onAddUpdateBook = (elm, id) => {
-            $('#modelCenterDynamicContent').load("/GetBook/" + id, (response, status, xhr) => {
+        var onAddUpdateGenere = (elm, id) => {
+            $('#modelCenterDynamicContent').load("/GetGenere/" + id, (response, status, xhr) => {
                 if (xhr.status != 200) {
                     showWarningToast(JSON.parse(response).message);
                 }
@@ -111,7 +97,7 @@
             });
         }
 
-        var onBookSubmit = (elm, e) => {
+        var onGenereSubmit = (elm, e) => {
             e.preventDefault();
             var $form = $(elm);
 
@@ -130,7 +116,7 @@
 
         }
 
-        var onDeleteBook = (elm, id) => {
+        var onDeleteGenere = (elm, id) => {
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -143,7 +129,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "DELETE",
-                        url: "/DeleteBook/" + id
+                        url: "/DeleteGenere/" + id
                     })
                         .done((data) => {
                             $table.api().ajax.reload(null, false);
@@ -160,8 +146,8 @@
 
         }
 
-        var onDetailBook = (elm, id) => {
-            $('#modelCenterDynamicContent').load("/GetDetailBook/" + id, (response, status, xhr) => {
+        var onDetailGenere = (elm, id) => {
+            $('#modelCenterDynamicContent').load("/GetDetailGenere/" + id, (response, status, xhr) => {
                 if (xhr.status != 200) {
                     showWarningToast(JSON.parse(response).message);
                 }

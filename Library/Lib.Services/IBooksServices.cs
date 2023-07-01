@@ -58,7 +58,7 @@ namespace Lib.Services
                 string whereClause = "";
                 if (!string.IsNullOrEmpty(search))
                 {
-                    whereClause = $@" where TRIM(LOWER(b.Title)) LIKE TRIM(LOWER('{search}'))+'%' and TRIM(LOWER(b.AuthorName)) LIKE TRIM(LOWER('{search}'))+'%'";
+                    whereClause = $@" where TRIM(LOWER(b.Title)) LIKE TRIM(LOWER('{search}'))+'%' or TRIM(LOWER(b.AuthorName)) LIKE TRIM(LOWER('{search}'))+'%'";
                 }
                 string query = $@"SELECT 
                             COUNT(*)

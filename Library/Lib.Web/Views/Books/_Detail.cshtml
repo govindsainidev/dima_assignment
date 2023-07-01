@@ -26,10 +26,10 @@
                 <dd class="col-sm-9">@Model.Genere</dd>
 
                 <dt class="col-sm-3">@Html.LabelFor(s=>s.CreatedAt)</dt>
-                <dd class="col-sm-9">@Model.CreatedAt.Value.ToLocalTime().ToString("dd MMM YYYY")</dd>
+                <dd class="col-sm-9">@Model.CreatedAt.Value.ToLocalTime().ToString("dd MMM yyyy")</dd>
 
                 <dt class="col-sm-3">@Html.LabelFor(s=>s.UpdatedAt)</dt>
-                <dd class="col-sm-9">@Model.UpdatedAt.Value.ToLocalTime().ToString("dd MMM YYYY")</dd>
+                <dd class="col-sm-9">@Model.UpdatedAt.Value.ToLocalTime().ToString("dd MMM yyyy")</dd>
 
             </dl>
         

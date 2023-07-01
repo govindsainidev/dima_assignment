@@ -51,7 +51,7 @@
                 "type": "POST",
                 "datatype": "json",
                 "error": function (jqXHR, textStatus, errorThrown) {
-                    if (!jqXHR?.responseJSON?.isSuccess)
+                    if (typeof jqXHR?.responseJSON?.isSuccess !== "undefined")
                         showWarningToast(jqXHR.responseJSON.message)
                 }
             },
@@ -82,7 +82,7 @@
 
                                             <button onclick=onDetailBook(this,'` + data + `')
                                                 type="button" class="btn-sm btn btn-icon btn-outline-info">
-                                                <span class="tf-icons bx bx-eye"></span>
+                                                <span class="tf-icons bx bx-detail"></span>
                                             </button>
 
                                             <button onclick=onDeleteBook(this,'` + data + `')
@@ -123,7 +123,7 @@
                 })
                 .fail((jqXHR, res, d) => {
                     debugger
-                    if (!jqXHR?.responseJSON?.isSuccess)
+                    if (typeof jqXHR?.responseJSON?.isSuccess !== "undefined")
                         showWarningToast(jqXHR.responseJSON.message)
                 })
 
@@ -151,7 +151,7 @@
                         })
                         .fail((jqXHR, textStatus, errorThrown) => {
                             debugger;
-                            if (!jqXHR?.responseJSON?.isSuccess)
+                            if (typeof jqXHR?.responseJSON?.isSuccess !== "undefined")
                                 showWarningToast(jqXHR.responseJSON.message)
                         });
                 }

@@ -140,10 +140,13 @@ table.dataTable {
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
     padding: 0 !important;
+    background: transparent !important;
+    border: transparent !important;
 }
 
     .dataTables_wrapper .dataTables_paginate .paginate_button a {
         padding: 10px 10px !important;
+        margin: 0;
     }
 .dt-buttons{
     margin-bottom:15px;

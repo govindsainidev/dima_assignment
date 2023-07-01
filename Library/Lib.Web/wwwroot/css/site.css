@@ -110,3 +110,7 @@
     text-align: center;
     margin-top: 1rem;
 }
+
+.card .dataTables_info, .card .dataTables_paginate, .card .dt-buttons, .card .dataTables_filter {
+    padding: 0 15px;
+}

@@ -31,40 +31,51 @@
             </div>
 
             <div class="mb-3">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Available Books</th>
-                            <th>Selected Books</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                @foreach (var item in Model.AllBooks)
-                                {
-                                    <label>@item.Title</label>
-
-                                    <br />
-                                }
-                            </td>
-                            <td>
-                                
-                                @foreach (var item in Model.SelectedBooks)
-                                {
-
-                                    @Html.Hidden(nameof(Model.LoanedBooks), item.Id)
+                <div class="loand_container" >
+                    <table class="table table-loanedbooks tableFixHead">
+                        <thead>
+                            <tr>
+                                <th>Available Books </th>
+                                <th>Selected Books</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="available_books_container">
+                                    @foreach (var item in Model.AllBooks)
+                                    {
+                                        <span>
+                                            <input type="checkbox" value="@item.Id" id="@item.Id" />
+                                            <label for="@item.Id"> @item.Title</label>
+                                        </span>
+                                    }
                                     
-                                    <label>@item.Title</label>
+                                </td>
+                                <td id="selected_books_container">
 
-                                    <br />
-                                }
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                    @foreach (var item in Model.SelectedBooks)
+                                    {
+                                        <span>
+                                            <input type="checkbox" value="@item.Id" id="@item.Id" />
+                                            <label for="@item.Id"> @item.Title</label>
+                                            <input type="hidden" value="@item.Id" name="@nameof(Model.LoanedBooks)" id="@item.Id" />
+                                        </span>
+                                       
+                                    }
+                                    
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="controls">
+                        <button type="button" onclick="onAddBook(this)" class="btn btn-icon btn-sm btn-outline-primary" id="right_to_left"><i class='bx bx-right-arrow-alt'></i></button>
+                        <button type="button" onclick="onRemoveBook(this)"  class="btn btn-icon btn-sm btn-outline-primary" id="left_to_right"><i class='bx bx-left-arrow-alt'></i></button>
+                    </div>
+               </div>
             </div>
 
+             @*Container to stored selected subscriber books*@
+            <div id="subscriber_books_collection" data-key="@nameof(Model.LoanedBooks)"></div>
         </div>
 
         <div class="modal-footer">

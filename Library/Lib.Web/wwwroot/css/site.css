@@ -148,9 +148,97 @@ table.dataTable {
         padding: 10px 10px !important;
         margin: 0;
     }
-.dt-buttons{
-    margin-bottom:15px;
+
+.dt-buttons {
+    margin-bottom: 15px;
 }
+
 .form-control-sm {
     padding: 10px 25px;
+}
+
+.table-loanedbooks {
+    width: 100%;
+    border: 1px solid #ddd;
+    height: 190px;
+    overflow: scroll;
+}
+
+    .table-loanedbooks tr th, .table-loanedbooks tr td {
+        border: 1px solid #ddd;
+    }
+
+        .table-loanedbooks tr td span {
+            margin: -1px -11px;
+            display: block;
+            position: relative;
+            vertical-align: top;
+        }
+
+            .table-loanedbooks tr td span input[type="checkbox"] {
+                opacity: 0;
+                width: 0;
+                height: 0;
+                position: absolute;
+            }
+
+                .table-loanedbooks tr td span input[type="checkbox"]:checked + label {
+                    background: #8BC34A;
+                    border-color: #c7c7c7;
+                    color: #fff;
+                }
+
+        .table-loanedbooks tr td label {
+            position: relative;
+            font-size: 13px;
+            border: 1px solid #ddd;
+            padding: 6px 10px;
+            border-radius: 0;
+            margin: 0;
+            display: inline-block;
+            line-height: 18px;
+            width: 100%;
+        }
+
+
+.tableFixHead {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+    .tableFixHead tbody {
+        display: block;
+        width: 100%;
+        overflow: auto;
+        height: 200px;
+    }
+
+    .tableFixHead thead tr {
+        display: block;
+    }
+
+    .tableFixHead th,
+    .tableFixHead td {
+        padding: 5px 10px;
+        width: 269px;
+        /* border: none !IMPORTANT; */
+        vertical-align: top;
+    }
+
+th {
+    background: #ABDD93;
+}
+
+.controls {
+    position: absolute;
+    top: 42%;
+    left: 46%;
+    width: 28px;
+    background: #fff;
+    border-radius: 3px;
+}
+
+.loand_container {
+    position: relative;
 }

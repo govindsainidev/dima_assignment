@@ -118,6 +118,9 @@ namespace Lib.Services
                     query = $@"INSERT INTO Subscribers (Firstname, Lastname,CreatedAt,UpdatedAt) OUTPUT INSERTED.Id VALUES 
                                   (@Firstname, @Lastname, @CreatedAt, @UpdatedAt)";
                     entityId = _idbConnection.QuerySingle<Guid>(query, data, _idbTransaction);
+
+
+                    
                 }
                 else
                 {
@@ -127,7 +130,26 @@ namespace Lib.Services
 
                     var rowsAffected = _idbConnection.Execute(query, data, _idbTransaction);
                     entityId = req.Id.Value;
+
+                   
+
+
+
                 }
+
+                #region manage subscriber loaned books
+                query = $@"DELETE FROM BooksLoans WHERE SubscriberId = '{entityId}'";
+                _idbConnection.Execute(query, transaction: _idbTransaction);
+
+                
+                if (req.LoanedBooks?.Count() > 0)
+                {
+                    int maxLoanedAllowed = _adminSettings.MaxLoanedAmount > 0 ? _adminSettings.MaxLoanedAmount : 3;
+                    var subscriberBooks = req.LoanedBooks.Select(s => new { SubscriberId = entityId, BookId = s }).Take(maxLoanedAllowed);
+                    query = $@"INSERT INTO BooksLoans (SubscriberId, BookId) VALUES (@SubscriberId, @BookId)";
+                    var isa = _idbConnection.Execute(query, subscriberBooks, transaction: _idbTransaction);
+                }
+                #endregion
 
                 return GetSubscribers(entityId);
 
@@ -176,7 +198,7 @@ namespace Lib.Services
             }
         }
 
-       
+
 
         public void Dispose()
         {

@@ -46,9 +46,11 @@ namespace Lib.Web.Controllers.Subscribers
                 if (!selectedbookRes.IsSuccess)
                     return BadRequest(selectedbookRes);
 
-                addDto.AllBooks = bookRes.Data;
+                addDto.LoanedBooks = selectedbookRes.Data.Select(s => s.Id.Value);
+
+                addDto.AllBooks = bookRes.Data.Where(s=> !addDto.LoanedBooks.Contains(s.Id.Value));
                 addDto.SelectedBooks = selectedbookRes.Data;
-                addDto.LoanedBooks = selectedbookRes.Data.Select(s=>s.Id.Value);
+                
 
                 return PartialView("_AddUpdate", addDto);
             }

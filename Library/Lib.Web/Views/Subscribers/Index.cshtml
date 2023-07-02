@@ -1,4 +1,5 @@
-﻿
+﻿@inject Microsoft.Extensions.Options.IOptions<Lib.Services.Core.AdminSettings> adminsetting;
+
 
 <div class="card">
     <h5 class="card-header">Subscribers <small>Listing all library subscribers</small></h5>
@@ -32,7 +33,7 @@
                     attr: { id: 'addnewsubscriberBtn' },
                     className: "btn btn-outline-primary",
                     action: function (e, dt, node, config) {
-                        debugger;
+                        
                         onAddUpdateSubscriber(e.currentTarget, '');
 
                     },
@@ -75,21 +76,21 @@
                     "render":
                         function (data, row) {
                             return `
-                                                    <button onclick=onAddUpdateSubscriber(this,'` + data + `')
-                                                 type="button" class="btn-sm btn btn-icon btn-outline-primary">
-                                                 <span class="tf-icons bx bx-edit"></span>
-                                            </button>
+                                                            <button onclick=onAddUpdateSubscriber(this,'` + data + `')
+                                                         type="button" class="btn-sm btn btn-icon btn-outline-primary">
+                                                         <span class="tf-icons bx bx-edit"></span>
+                                                    </button>
 
-                                                    <button onclick=onDetailSubscriber(this,'` + data + `')
-                                                type="button" class="btn-sm btn btn-icon btn-outline-info">
-                                                <span class="tf-icons bx bx-detail"></span>
-                                            </button>
+                                                            <button onclick=onDetailSubscriber(this,'` + data + `')
+                                                        type="button" class="btn-sm btn btn-icon btn-outline-info">
+                                                        <span class="tf-icons bx bx-detail"></span>
+                                                    </button>
 
-                                                    <button onclick=onDeleteSubscriber(this,'` + data + `')
-                                                type="button" class="btn-sm btn btn-icon btn-outline-danger">
-                                                <span class="tf-icons bx bx-trash"></span>
-                                            </button>
-                                                   `;
+                                                            <button onclick=onDeleteSubscriber(this,'` + data + `')
+                                                        type="button" class="btn-sm btn btn-icon btn-outline-danger">
+                                                        <span class="tf-icons bx bx-trash"></span>
+                                                    </button>
+                                                           `;
                         }
                 },
             ]
@@ -117,7 +118,7 @@
 
             $.post($form.attr("action"), $form.serialize())
                 .done((dt, status, req) => {
-                    debugger;
+                    
                     $table.api().ajax.reload(null, false);
                     $("#modalCenter").modal("hide");
                 })
@@ -150,7 +151,7 @@
                             showSuccessToast("Your file has been deleted");
                         })
                         .fail((jqXHR, textStatus, errorThrown) => {
-                            debugger;
+                            
                             if (typeof jqXHR?.responseJSON?.isSuccess !== "undefined")
                                 showWarningToast(jqXHR.responseJSON.message)
                         });
@@ -174,6 +175,54 @@
                 }
 
             });
+        }
+
+        
+        var onAddBook = (elm) => {
+            
+            let subscriber_books_collection = document.querySelector("#subscriber_books_collection");
+            let inputName = subscriber_books_collection.dataset.key;;
+            debugger;
+            let maxbookallowed = @adminsetting.Value.MaxLoanedAmount;
+            let books = [...document.querySelectorAll('#selected_books_container input[type="checkbox"]:checked')];
+            if (books.length >= maxbookallowed){
+                showWarningToast("A subscriber can loan up to " + maxbookallowed + " books");
+                return;
+            }
+            let leftSelectedBooks = [...document.querySelectorAll('#available_books_container input[type="checkbox"]:checked')].map(s => {
+                
+                let $span = s.parentElement;
+                $(generateInput(inputName, s.value)).appendTo($span);
+
+                $($span).prependTo("#selected_books_container");
+                return s;
+            });
+
+
+        }
+        var onRemoveBook = (elm) => {
+            debugger;
+            let subscriber_books_collection = document.querySelector("#subscriber_books_collection");
+            let inputName = subscriber_books_collection.dataset.key;;
+
+            let rightSelectedBooks = [...document.querySelectorAll('#selected_books_container input[type="checkbox"]:checked')].map(s => {
+                
+                let $span = s.parentElement;
+                $('input[type="hidden"]', $span).remove();
+                $($span).prependTo("#available_books_container");
+                return s;
+            });
+            
+        }
+
+       
+
+        var generateInput = (name, val) => {
+            var newElement = document.createElement('input');
+            newElement.setAttribute('type', 'hidden');
+            newElement.setAttribute('value', val);
+            newElement.setAttribute('name', name);
+            return newElement;
         }
     </script>
 

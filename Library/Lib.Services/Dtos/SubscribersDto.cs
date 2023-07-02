@@ -20,7 +20,9 @@ namespace Lib.Services.Dtos
 
     public class AddUpdateSubscribersDto : SubscribersBaseDto
     {
-        
+        public IEnumerable<BooksDto> AllBooks { get; set; }
+        public IEnumerable<BooksDto> SelectedBooks { get; set; }
+        public IEnumerable<Guid> LoanedBooks { get; set; }
     }
 
     public class SubscribersDto : SubscribersBaseDto
@@ -29,7 +31,7 @@ namespace Lib.Services.Dtos
         public DateTime? CreatedAt { get; set; }
         [DisplayName("Updated At")]
         public DateTime? UpdatedAt { get; set; }
-        [DisplayName("Genere")]
+        [DisplayName("Books")]
         public int Totalbook { get; set; }
 
 

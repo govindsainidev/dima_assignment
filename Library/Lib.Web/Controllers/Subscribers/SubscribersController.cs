@@ -6,16 +6,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
+using System.Linq;
 
 namespace Lib.Web.Controllers.Subscribers
 {
     public class SubscribersController : BaseController
     {
         private readonly ISubscribersServices _subscribersServices;
+        private readonly IBooksServices _booksServices;
 
-        public SubscribersController(ISubscribersServices subscribersServices)
+        public SubscribersController(ISubscribersServices subscribersServices, IBooksServices booksServices)
         {
             _subscribersServices = subscribersServices;
+            _booksServices = booksServices;
         }
 
         [HttpGet]
@@ -34,7 +37,19 @@ namespace Lib.Web.Controllers.Subscribers
                 _subscribersServices.Commit();
                 AddUpdateSubscribersDto addDto = _mapper.Map<AddUpdateSubscribersDto, SubscribersDto>(result.Data);
                 addDto = addDto ?? new AddUpdateSubscribersDto();
-               
+
+                var bookRes = _booksServices.GetAllBooks();
+                if(!bookRes.IsSuccess)
+                    return BadRequest(result);
+
+                var selectedbookRes = _booksServices.SubscriberBooks(id ?? Guid.Empty);
+                if (!selectedbookRes.IsSuccess)
+                    return BadRequest(selectedbookRes);
+
+                addDto.AllBooks = bookRes.Data;
+                addDto.SelectedBooks = selectedbookRes.Data;
+                addDto.LoanedBooks = selectedbookRes.Data.Select(s=>s.Id.Value);
+
                 return PartialView("_AddUpdate", addDto);
             }
             else { return BadRequest(result); }

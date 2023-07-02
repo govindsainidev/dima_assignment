@@ -14,7 +14,7 @@
                 aria-label="Close"></button>
     </div>
     <form id="addBookForm" method="post" action="/AddSubscriber" onsubmit="onSubscriberSubmit(this,event)">
-    
+
         @Html.AntiForgeryToken()
         @Html.HiddenFor(s => s.Id)
         <div class="modal-body" id="modalCenterBody">
@@ -23,11 +23,46 @@
                 @Html.TextBoxFor(s=>s.Firstname, htmlAttributes: new {@class= "form-control", placeholder="Enter First Name"})
                 @Html.ValidationMessageFor(s => s.Firstname, "", new { @class = "text-danger" })
             </div>
-           
+
             <div class="mb-3">
                 @Html.LabelFor(s=>s.Lastname,"Last Name", new {@class= "form-label"})
                 @Html.TextBoxFor(s=>s.Lastname, htmlAttributes: new {@class= "form-control", placeholder="Enter Last Name"})
                 @Html.ValidationMessageFor(s => s.Lastname, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Available Books</th>
+                            <th>Selected Books</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                @foreach (var item in Model.AllBooks)
+                                {
+                                    <label>@item.Title</label>
+
+                                    <br />
+                                }
+                            </td>
+                            <td>
+                                
+                                @foreach (var item in Model.SelectedBooks)
+                                {
+
+                                    @Html.Hidden(nameof(Model.LoanedBooks), item.Id)
+                                    
+                                    <label>@item.Title</label>
+
+                                    <br />
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
         </div>

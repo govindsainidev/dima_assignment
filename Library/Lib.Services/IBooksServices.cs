@@ -23,6 +23,9 @@ namespace Lib.Services
         public ServicesResponse<BooksDto> AddUpdateBook(AddUpdateBooksDto req);
         public ServicesResponse<BooksDto> GetBook(Guid id);
         public ServicesResponse<bool> DeleteBook(Guid id);
+
+        public ServicesResponse<IEnumerable<BooksDto>> GetAllBooks();
+        public ServicesResponse<IEnumerable<BooksDto>> SubscriberBooks(Guid subscriberId);
     }
 
     public class BooksServices : BaseServices, IBooksServices
@@ -94,9 +97,13 @@ namespace Lib.Services
         {
             try
             {
-                var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(req));
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                data.Add("Title", req.Title);
+                data.Add("AuthorName", req.AuthorName);
+                data.Add("GenereId", req.GenereId);
                 data.Add("CreatedAt", DateTime.UtcNow);
                 data.Add("UpdatedAt", DateTime.UtcNow);
+
                 string query = string.Empty;
                 Guid entityId;
                 if (_adminSettings.IsUniqueBookName)
@@ -170,6 +177,46 @@ namespace Lib.Services
             }
         }
 
+
+        public ServicesResponse<IEnumerable<BooksDto>> GetAllBooks()
+        {
+            try
+            {
+
+                string query = $@" SELECT  b.*, ge.Name as Genere, ge.Id as GenereId FROM Books b 
+                                   LEFT JOIN Geners ge ON b.GenereId = ge.Id";
+
+                IEnumerable<BooksDto> smodel = _idbConnection.Query<BooksDto>(query, transaction: _idbTransaction);
+
+                return ServicesResponse<IEnumerable<BooksDto>>.Success(smodel);
+
+
+            }
+            catch (Exception ex)
+            {
+                return ServicesResponse<IEnumerable<BooksDto>>.Error(ex.GetActualError());
+            }
+        }
+        public ServicesResponse<IEnumerable<BooksDto>> SubscriberBooks(Guid subscriberId)
+        {
+            try
+            {
+
+                string query = $@" SELECT  b.*, ge.Name as Genere, ge.Id as GenereId FROM Books b 
+                                    LEFT JOIN Geners ge ON b.GenereId = ge.Id
+                                    WHERE b.Id in (SELECT bl.BookId from BooksLoans bl where bl.SubscriberId = '{subscriberId}' )";
+
+                IEnumerable<BooksDto> smodel = _idbConnection.Query<BooksDto>(query, transaction: _idbTransaction);
+
+                return ServicesResponse<IEnumerable<BooksDto>>.Success(smodel);
+
+
+            }
+            catch (Exception ex)
+            {
+                return ServicesResponse<IEnumerable<BooksDto>>.Error(ex.GetActualError());
+            }
+        }
 
         public void Dispose()
         {

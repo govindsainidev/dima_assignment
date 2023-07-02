@@ -5,6 +5,7 @@ using Lib.Services.Paging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace Lib.Services
@@ -17,6 +18,7 @@ namespace Lib.Services
         public ServicesResponse<SubscribersDto> AddUpdateSubscribers(AddUpdateSubscribersDto req);
         public ServicesResponse<SubscribersDto> GetSubscribers(Guid id);
         public ServicesResponse<bool> DeleteSubscribers(Guid id);
+
     }
 
     public class SubscribersServices : BaseServices, ISubscribersServices
@@ -90,11 +92,26 @@ namespace Lib.Services
         {
             try
             {
-                var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(req));
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                data.Add("Firstname", req.Firstname);
+                data.Add("Lastname", req.Lastname);
                 data.Add("CreatedAt", DateTime.UtcNow);
                 data.Add("UpdatedAt", DateTime.UtcNow);
+
                 string query = string.Empty;
                 Guid entityId;
+
+                if (_adminSettings.IsUniqueSubscriberName)
+                {
+                    query = $@"SELECT Count(s.Id) FROM Subscribers s WHERE TRIM(LOWER(s.Firstname)) = TRIM(LOWER('{req.Firstname}')) and TRIM(LOWER(s.Lastname)) = TRIM(LOWER('{req.Lastname}'))";
+
+                    if (!string.IsNullOrEmpty(req.Id?.ToString()))
+                        query = query + $" and Id !='{req.Id}'";
+
+                    int model = _idbConnection.QueryFirstOrDefault<int>(query, transaction: _idbTransaction);
+                    if (model > 0)
+                        return ServicesResponse<SubscribersDto>.Error($"{req.Firstname} {req.Lastname} Subscriber already exist");
+                }
 
                 if (string.IsNullOrEmpty(req.Id?.ToString()))
                 {
@@ -104,10 +121,11 @@ namespace Lib.Services
                 }
                 else
                 {
+
                     query = $@"update Subscribers SET Firstname=@Firstname, Lastname=@Lastname, UpdatedAt=@UpdatedAt 
                                 WHERE Id = '{req.Id}'";
 
-                    int rowsAffected = _idbConnection.Execute(query, data, _idbTransaction);
+                    var rowsAffected = _idbConnection.Execute(query, data, _idbTransaction);
                     entityId = req.Id.Value;
                 }
 
@@ -158,6 +176,7 @@ namespace Lib.Services
             }
         }
 
+       
 
         public void Dispose()
         {

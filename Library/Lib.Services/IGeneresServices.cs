@@ -97,6 +97,10 @@ namespace Lib.Services
                 string query = string.Empty;
                 int entityId;
 
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                data.Add("Name", req.Name);
+                data.Add("Description", req.Description);
+
                 query = $@"SELECT Count(g.Name) FROM Geners g WHERE TRIM(LOWER(g.Name)) = TRIM(LOWER('{req.Name}'))";
 
                 if (req.Id > 0)
@@ -110,7 +114,7 @@ namespace Lib.Services
                 if (req.Id > 0)
                 {
                     query = $@"UPDATE Geners SET Name=@Name, Description=@Description WHERE Id = '{req.Id}'";
-                    int rowsAffected = _idbConnection.Execute(query, req, _idbTransaction);
+                    int rowsAffected = _idbConnection.Execute(query, data, _idbTransaction);
                     entityId = req.Id ?? 0;
 
 
@@ -118,7 +122,7 @@ namespace Lib.Services
                 else
                 {
                     query = $@"INSERT INTO Geners (Name, Description) OUTPUT INSERTED.Id VALUES (@Name, @Description)";
-                    entityId = _idbConnection.QuerySingle<int>(query, req, _idbTransaction);
+                    entityId = _idbConnection.QuerySingle<int>(query, data, _idbTransaction);
                 }
 
                 return GetGenere(entityId);

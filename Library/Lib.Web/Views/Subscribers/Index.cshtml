@@ -1,1 +1,183 @@
-﻿<h1>Subscribers</h1>
+﻿
+
+<div class="card">
+    <h5 class="card-header">Subscribers <small>Listing all library subscribers</small></h5>
+    <div class="card-body">
+        <table id="subscriberDatatable" class="table table-striped table-bordered" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Books</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+@section scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        var $table = $('#subscriberDatatable').dataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    text: 'Add Subscriber',
+                    titleAttr: 'Add new Subscriber',
+                    attr: { id: 'addnewsubscriberBtn' },
+                    className: "btn btn-outline-primary",
+                    action: function (e, dt, node, config) {
+                        debugger;
+                        onAddUpdateSubscriber(e.currentTarget, '');
+
+                    },
+                    init: function (api, node, config) {
+                        $(node).removeClass('dt-button').prepend('<span class="tf-icons bx bx-book-add"></span> ')
+                        //$('span', node).addClass('tf-icons bx bx-folder-plus').html('');
+                    }
+                }
+            ],
+            processing: true,
+            serverSide: true,
+            ordering: false,
+            filter: true,
+            ajax: {
+                "url": "@Url.Action("GetSubscriberPaging","Subscribers")",
+                "type": "POST",
+                "datatype": "json",
+                "error": function (jqXHR, textStatus, errorThrown) {
+                    if (typeof jqXHR?.responseJSON?.isSuccess !== "undefined")
+                        showWarningToast(jqXHR.responseJSON.message)
+                }
+            },
+            columns: [
+                { "data": "firstName", "autoWidth": true },
+                { "data": "lastName", "autoWidth": true },
+                { "data": "totalbook", "autoWidth": true },
+                {
+                    "data": "createdAt", "autoWidth": true, "render": function (data) {
+                        var date = new Date(data);
+                        var month = date.getMonth() + 1;
+                        var day = date.getDate();
+                        return date.getFullYear() + "/"
+                            + (month.length > 1 ? month : "0" + month) + "/"
+                            + ("0" + day).slice(-2);
+                        //return date format like 2000/01/01;
+                    },
+                },
+                {
+                    "data": "id", "autoWidth": true,
+                    "render":
+                        function (data, row) {
+                            return `
+                                                    <button onclick=onAddUpdateSubscriber(this,'` + data + `')
+                                                 type="button" class="btn-sm btn btn-icon btn-outline-primary">
+                                                 <span class="tf-icons bx bx-edit"></span>
+                                            </button>
+
+                                                    <button onclick=onDetailSubscriber(this,'` + data + `')
+                                                type="button" class="btn-sm btn btn-icon btn-outline-info">
+                                                <span class="tf-icons bx bx-detail"></span>
+                                            </button>
+
+                                                    <button onclick=onDeleteSubscriber(this,'` + data + `')
+                                                type="button" class="btn-sm btn btn-icon btn-outline-danger">
+                                                <span class="tf-icons bx bx-trash"></span>
+                                            </button>
+                                                   `;
+                        }
+                },
+            ]
+        });
+
+        var onAddUpdateSubscriber = (elm, id) => {
+            $('#modelCenterDynamicContent').load("/GetSubscriber/" + id, (response, status, xhr) => {
+                if (xhr.status != 200) {
+                    showWarningToast(JSON.parse(response).message);
+                }
+                else {
+                    $("#modalCenter").modal("show");
+                    setTimeout(() => {
+                        $form = $("#modalCenter form")[0];
+                        $.validator.unobtrusive.parse($form)
+                    }, 1000)
+                }
+
+            });
+        }
+
+        var onBookSubscriber = (elm, e) => {
+            e.preventDefault();
+            var $form = $(elm);
+
+            $.post($form.attr("action"), $form.serialize())
+                .done((dt, status, req) => {
+                    debugger;
+                    $table.api().ajax.reload(null, false);
+                    $("#modalCenter").modal("hide");
+                })
+                .fail((jqXHR, res, d) => {
+                    debugger
+                    if (typeof jqXHR?.responseJSON?.isSuccess !== "undefined")
+                        showWarningToast(jqXHR.responseJSON.message)
+                })
+
+
+        }
+
+        var onDeleteSubscriber = (elm, id) => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: "/DeleteSubscriber/" + id
+                    })
+                        .done((data) => {
+                            $table.api().ajax.reload(null, false);
+                            showSuccessToast("Your file has been deleted");
+                        })
+                        .fail((jqXHR, textStatus, errorThrown) => {
+                            debugger;
+                            if (typeof jqXHR?.responseJSON?.isSuccess !== "undefined")
+                                showWarningToast(jqXHR.responseJSON.message)
+                        });
+                }
+            })
+
+
+        }
+
+        var onDetailSubscriber = (elm, id) => {
+            $('#modelCenterDynamicContent').load("/GetDetailSubscriber/" + id, (response, status, xhr) => {
+                if (xhr.status != 200) {
+                    showWarningToast(JSON.parse(response).message);
+                }
+                else {
+                    $("#modalCenter").modal("show");
+                    setTimeout(() => {
+                        $form = $("#modalCenter form")[0];
+                        $.validator.unobtrusive.parse($form)
+                    }, 1000)
+                }
+
+            });
+        }
+    </script>
+
+
+}
+
+

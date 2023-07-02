@@ -139,7 +139,10 @@ namespace Lib.Services
             try
             {
 
-                string query = $@"SELECT * FROM Books WHERE Id = '{id}'";
+                string query = $@" SELECT  b.*, ge.Name as Genere, ge.Id as GenereId FROM Books b 
+                                   LEFT JOIN Geners ge ON b.GenereId = ge.Id  
+                                   WHERE b.Id = '{id}'";
+
                 BooksDto smodel = _idbConnection.QueryFirstOrDefault<BooksDto>(query, transaction: _idbTransaction);
 
                 return ServicesResponse<BooksDto>.Success(smodel);

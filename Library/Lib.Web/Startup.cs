@@ -33,6 +33,7 @@ namespace Lib.Web
             services.AddSingleton<IGenericMapper, GenericMapper>();
             services.AddScoped<IBooksServices, BooksServices>();
             services.AddScoped<IGenersServices, GenersServices>();
+            services.AddScoped<ISubscribersServices, SubscribersServices>();
             services.AddAuthorization();
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));

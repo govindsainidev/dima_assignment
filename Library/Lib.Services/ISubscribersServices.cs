@@ -128,7 +128,7 @@ namespace Lib.Services
                 string query = $@" SELECT s.Id, s.Firstname, s.Lastname, s.CreatedAt ,s.UpdatedAt, count(bl.Id) AS Totalbook
                             FROM Subscribers s
                             LEFT JOIN BooksLoans bl ON bl.SubscriberId = s.Id 
-                            WHERE b.Id = '{id}'
+                            WHERE s.Id = '{id}'
                             GROUP BY s.Id, s.Firstname, s.Lastname, s.CreatedAt ,s.UpdatedAt";
 
                 SubscribersDto smodel = _idbConnection.QueryFirstOrDefault<SubscribersDto>(query, transaction: _idbTransaction);

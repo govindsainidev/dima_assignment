@@ -59,7 +59,11 @@
             columns: [
                 { "data": "firstname", "autoWidth": true },
                 { "data": "lastname", "autoWidth": true },
-                { "data": "totalbook", "autoWidth": true },
+                {
+                    "data": "totalbook", "autoWidth": true,
+                    "render": (data, row) => {
+                            return `<button type="button" class="btn btn-sm"> See All (` + data + `)</button>`;}
+                },
                 {
                     "data": "createdAt", "autoWidth": true, "render": function (data) {
                         var date = new Date(data);
@@ -184,7 +188,7 @@
             let inputName = subscriber_books_collection.dataset.key;;
             debugger;
             let maxbookallowed = @adminsetting.Value.MaxLoanedAmount;
-            let books = [...document.querySelectorAll('#selected_books_container input[type="checkbox"]:checked')];
+            let books = [...document.querySelectorAll("#selected_books_container input[type='hidden']")];
             if (books.length >= maxbookallowed){
                 showWarningToast("A subscriber can loan up to " + maxbookallowed + " books");
                 return;

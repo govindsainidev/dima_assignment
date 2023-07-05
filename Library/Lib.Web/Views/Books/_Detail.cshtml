@@ -31,6 +31,29 @@
                 <dt class="col-sm-3">@Html.LabelFor(s=>s.UpdatedAt)</dt>
                 <dd class="col-sm-9">@Model.UpdatedAt.Value.ToLocalTime().ToString("dd MMM yyyy")</dd>
 
+            <dt class="col-sm-3">Subscribers</dt>
+            <dd class="col-sm-9">
+                <table class="subscribersBooks">
+                    <tbody>
+                        <tr>
+                            <td>Total</td>
+                            <td>@Model.TotalSubscribers</td>
+                        </tr>
+                        @for (int i = 0; i < Model.Subscribers.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>
+                                    @Model.Subscribers[i].Firstname @Model.Subscribers[i].Lastname
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+            </dd>
+
             </dl>
         
 

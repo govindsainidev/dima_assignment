@@ -33,6 +33,7 @@ namespace Lib.Services.Dtos
         public DateTime? UpdatedAt { get; set; }
         [DisplayName("Books")]
         public int Totalbook { get; set; }
+        public List<BooksDto> LoanedBooks { get; set; }
 
 
     }

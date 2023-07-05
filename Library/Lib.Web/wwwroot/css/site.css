@@ -242,3 +242,49 @@ th {
 .loand_container {
     position: relative;
 }
+
+.subscribersBooks * {
+}
+
+.subscribersBooks {
+    width: 100%;
+}
+
+.loanedbook {
+    display: flow-root;
+    text-align: left;
+    padding: 0;
+}
+
+    .loanedbook label {
+        background: #eee;
+        padding: 0 8px;
+        font-size: 13px;
+        border: 1px solid;
+        border-radius: 3px;
+        line-height: 20px;
+    }
+
+    .loanedbook h3 {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+        .loanedbook h3 small {
+            display: block;
+        }
+
+.subscribersBooks td {
+    padding: 5px 0;
+    vertical-align: top;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.subscribersBooks tr:first-child td {
+    background: #eee;
+    padding: 6px 4px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+}

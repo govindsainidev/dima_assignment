@@ -25,15 +25,38 @@ namespace Lib.Services
         public ServicesResponse<bool> DeleteBook(Guid id);
 
         public ServicesResponse<IEnumerable<BooksDto>> GetAllBooks();
+        public ServicesResponse<IEnumerable<SubscribersDto>> GetBookSubscribers(Guid bookid);
         public ServicesResponse<IEnumerable<BooksDto>> SubscriberBooks(Guid subscriberId);
     }
 
     public class BooksServices : BaseServices, IBooksServices
     {
+        
 
         public BooksServices()
         {
             Initilize();
+            
+        }
+       public ServicesResponse<IEnumerable<SubscribersDto>> GetBookSubscribers(Guid bookid)
+        {
+            try
+            {
+
+                string query = $@" SELECT  s.* FROM Subscribers s 
+                                    WHERE s.Id in(select bl.SubscriberId from  BooksLoans bl where  bl.BookId = '{bookid}')
+                                    order by s.UpdatedAt desc";
+
+                IEnumerable<SubscribersDto> smodel = _idbConnection.Query<SubscribersDto>(query, transaction: _idbTransaction);
+
+                return ServicesResponse<IEnumerable<SubscribersDto>>.Success(smodel);
+
+
+            }
+            catch (Exception ex)
+            {
+                return ServicesResponse<IEnumerable<SubscribersDto>>.Error(ex.GetActualError());
+            }
         }
 
         public ServicesResponse<PagedResults<List<BooksDto>>> BookPaging(DataTableRequest req)
@@ -151,7 +174,9 @@ namespace Lib.Services
                                    WHERE b.Id = '{id}'";
 
                 BooksDto smodel = _idbConnection.QueryFirstOrDefault<BooksDto>(query, transaction: _idbTransaction);
-
+                var subscriber = GetBookSubscribers(id).Data.ToList();
+                smodel.TotalSubscribers = subscriber.Count;
+                smodel.Subscribers = subscriber;
                 return ServicesResponse<BooksDto>.Success(smodel);
 
 

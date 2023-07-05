@@ -33,5 +33,8 @@ namespace Lib.Services.Dtos
         public DateTime? UpdatedAt { get; set; }
         [DisplayName("Genere")]
         public string Genere { get; set; }
+        [DisplayName("Total Subscribers")]
+        public int TotalSubscribers { get; set; }
+        public List<SubscribersDto> Subscribers { get; set; }
     }
 }

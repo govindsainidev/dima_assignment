@@ -39,7 +39,7 @@ namespace Lib.Web.Controllers.Subscribers
                 addDto = addDto ?? new AddUpdateSubscribersDto();
 
                 var bookRes = _booksServices.GetAllBooks();
-                if(!bookRes.IsSuccess)
+                if (!bookRes.IsSuccess)
                     return BadRequest(result);
 
                 var selectedbookRes = _booksServices.SubscriberBooks(id ?? Guid.Empty);
@@ -48,9 +48,9 @@ namespace Lib.Web.Controllers.Subscribers
 
                 addDto.LoanedBooks = selectedbookRes.Data.Select(s => s.Id.Value);
 
-                addDto.AllBooks = bookRes.Data.Where(s=> !addDto.LoanedBooks.Contains(s.Id.Value));
+                addDto.AllBooks = bookRes.Data.Where(s => !addDto.LoanedBooks.Contains(s.Id.Value));
                 addDto.SelectedBooks = selectedbookRes.Data;
-                
+
 
                 return PartialView("_AddUpdate", addDto);
             }
@@ -64,6 +64,12 @@ namespace Lib.Web.Controllers.Subscribers
             var result = _subscribersServices.GetSubscribers(id);
             if (result.IsSuccess)
             {
+                var loanedBooks = _booksServices.SubscriberBooks(id);
+                if (!loanedBooks.IsSuccess)
+                    return StatusCode(StatusCodes.Status500InternalServerError, result);
+
+                result.Data.LoanedBooks = loanedBooks.Data.ToList();
+
                 return PartialView("_Detail", result.Data);
             }
             else { return StatusCode(StatusCodes.Status500InternalServerError, result); }

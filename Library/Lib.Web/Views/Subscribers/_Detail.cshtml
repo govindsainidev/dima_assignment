@@ -14,25 +14,53 @@
     </div>
 
     <div class="modal-body">
-        
-            <dl class="row mt-2">
-                <dt class="col-sm-3">@Html.LabelFor(s=>s.Firstname)</dt>
+
+        <dl class="row mt-2">
+            <dt class="col-sm-3">@Html.LabelFor(s=>s.Firstname)</dt>
             <dd class="col-sm-9">@Model.Firstname</dd>
 
-                <dt class="col-sm-3">@Html.LabelFor(s=>s.Lastname)</dt>
+            <dt class="col-sm-3">@Html.LabelFor(s=>s.Lastname)</dt>
             <dd class="col-sm-9">@Model.Lastname</dd>
 
-                <dt class="col-sm-3">@Html.LabelFor(s=>s.Totalbook)</dt>
-            <dd class="col-sm-9">@Model.Totalbook</dd>
+            <dt class="col-sm-3">@Html.LabelFor(s=>s.Totalbook)</dt>
+            <dd class="col-sm-9">
+                <table class="subscribersBooks">
+                    <tbody>
+                        <tr>
+                            <td>Total</td>
+                            <td>@Model.Totalbook</td>
+                        </tr>
+                        @for (int i = 0; i < Model.LoanedBooks.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>
+                                    <div class="loanedbook">
+                                        <h3>
+                                            @Model.LoanedBooks[i].Title
+                                            <small>
+                                                @Model.LoanedBooks[i].AuthorName
+                                            </small>
+                                        </h3>
+                                        <label>@Model.LoanedBooks[i].Genere</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
 
-                <dt class="col-sm-3">@Html.LabelFor(s=>s.CreatedAt)</dt>
-                <dd class="col-sm-9">@Model.CreatedAt.Value.ToLocalTime().ToString("dd MMM yyyy")</dd>
+                    </tbody>
+                </table>
 
-                <dt class="col-sm-3">@Html.LabelFor(s=>s.UpdatedAt)</dt>
-                <dd class="col-sm-9">@Model.UpdatedAt.Value.ToLocalTime().ToString("dd MMM yyyy")</dd>
+            </dd>
 
-            </dl>
-        
+            <dt class="col-sm-3">@Html.LabelFor(s=>s.CreatedAt)</dt>
+            <dd class="col-sm-9">@Model.CreatedAt.Value.ToLocalTime().ToString("dd MMM yyyy")</dd>
+
+            <dt class="col-sm-3">@Html.LabelFor(s=>s.UpdatedAt)</dt>
+            <dd class="col-sm-9">@Model.UpdatedAt.Value.ToLocalTime().ToString("dd MMM yyyy")</dd>
+
+        </dl>
+
 
     </div>
 

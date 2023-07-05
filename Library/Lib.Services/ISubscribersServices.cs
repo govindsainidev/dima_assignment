@@ -173,6 +173,7 @@ namespace Lib.Services
 
                 SubscribersDto smodel = _idbConnection.QueryFirstOrDefault<SubscribersDto>(query, transaction: _idbTransaction);
 
+
                 return ServicesResponse<SubscribersDto>.Success(smodel);
 
 

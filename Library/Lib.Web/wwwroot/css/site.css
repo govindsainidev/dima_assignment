@@ -288,3 +288,21 @@ th {
     font-weight: bold;
     text-align: left;
 }
+
+ul.dropdown-menu.show > li:hover ul.dropdown-menu {
+    display: block;
+}
+
+ul.dropdown-menu.show > li ul.dropdown-menu {
+    left: 100%;
+    box-shadow: none;
+    top: 0;
+}
+
+a.dropdown-item {
+}
+
+ul.dropdown-menu.show {
+    box-shadow: none;
+    border: 1px solid #eee;
+}

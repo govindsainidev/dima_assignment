@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="light-style" dir="ltr" data-theme="theme-default" data-assets-path="../assets/">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <title>@ViewData["Title"] - Library</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+          rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- Icons. Uncomment required icon fonts -->
+    <link href="~/fonts/boxicons.css" rel="stylesheet" />
+
+    <!-- Core CSS -->
+    <link href="~/css/core.css" rel="stylesheet" class="template-customizer-core-css" />
+    <link href="~/css/theme-default.css" rel="stylesheet" class="template-customizer-theme-css" />
+    <link href="~/lib/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
+    <link href="~/lib/datatables/css/datatables.min.css" rel="stylesheet" />
+    <link href="~/lib/datatables/css/datatables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <!-- Vendors CSS -->
+    <link href="~/lib/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" />
+
+
+    <!-- Helpers -->
+    <script src="~/js/helpers.js"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="~/js/config.js"></script>
+
+</head>
+<body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar layout-without-menu">
+        <div class="layout-container">
+            <!-- Layout container -->
+            <div class="layout-page">
+                <!-- Navbar -->
+
+                <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+                     id="layout-navbar">
+                    <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                        <!-- Search -->
+                        <div class="navbar-nav align-items-center">
+                            <ul class="navbar-nav flex-row align-items-center ms-auto">
+                                <!-- User -->
+                                <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                                    <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                                       Home
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item" href="javascript:void(0);">
+                                                <i class="bx bx-book me-2"></i>
+                                                <span class="align-middle">Manage Library > </span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item" href="@Url.Action("Index","Subscribers")">
+                                                        <i class='bx bxs-book-reader me-2'></i>
+                                                        <span class="align-middle">Add subscribers </span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="@Url.Action("Index","Books")">
+                                                        <i class='bx bx-book-add me-2'></i>
+                                                        <span class="align-middle">Add Books</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="@Url.Action("Index","Genere")">
+                                                        <i class='bx bx-book-add me-2'></i>
+                                                        <span class="align-middle">Add Gener</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="@Url.Action("BooksLoan","Books")">
+                                                <i class='bx bx-book-bookmark me-2'></i>
+                                                <span class="align-middle">Loan/Books</span>
+                                            </a>
+                                        </li> 
+                                        <li>
+                                            <a class="dropdown-item" href="@Url.Action("Information","Dashboard")">
+                                                <i class="bx bx-detail me-2"></i>
+                                                <span class="align-middle">Display Information</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!--/ User -->
+                            </ul>
+                            
+                        </div>
+                        
+                    </div>
+                </nav>
+
+                <!-- / Navbar -->
+                <!-- Content wrapper -->
+                <div class="content-wrapper">
+                    <!-- Content -->
+
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <!-- Layout Demo -->
+                        @RenderBody()
+                        <!--/ Layout Demo -->
+                    </div>
+                    <!-- / Content -->
+                    <!-- Footer -->
+                    <footer class="content-footer footer bg-footer-theme">
+                        <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+                            <div class="mb-2 mb-md-0">
+                                © 2022
+                                @* <script>
+                                document.write(new Date().getFullYear());
+                                </script>*@
+
+                            </div>
+
+                        </div>
+                    </footer>
+                    <!-- / Footer -->
+                    <!-- Modal -->
+                    <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content" id="modelCenterDynamicContent">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal -->
+                    <!-- Toast with Placements -->
+                    <div class="bs-toast toast toast-placement-ex m-2"
+                         role="alert"
+                         aria-live="assertive"
+                         aria-atomic="true"
+                         data-delay="2000">
+                        <div class="toast-header">
+                            <i class="bx bx-bell me-2"></i>
+                            <div class="me-auto fw-semibold" id="toastTitle">Bootstrap</div>
+                            <small id="toastTime">1 sec ago</small>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body" id="toastMessage">Fruitcake chocolate bar tootsie roll gummies gummies jelly beans cake.</div>
+                    </div>
+                    <!-- Toast with Placements -->
+                    <!-- Overlay -->
+                    <div class="layout-overlay layout-menu-toggle"></div>
+                    <div class="content-backdrop fade"></div>
+                </div>
+                <!-- Content wrapper -->
+            </div>
+            <!-- / Layout page -->
+        </div>
+    </div>
+    <!-- / Layout wrapper -->
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/popper/popper.js"></script>
+    <script src="~/lib/bootstrap.js"></script>
+    <script src="~/lib/datatable/js/datatable.min.js"></script>
+    <script src="~/lib/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
+    <script src="~/lib/datatables/js/datatables.bootstrap4.min.js"></script>
+    <script src="~/lib/datatables/js/datatables.buttons.min.js"></script>
+    <script src="~/lib/sweet-alert2/sweetalert2.all.min.js"></script>
+
+    <script src="~/js/menu.js"></script>
+    <!-- endbuild -->
+    <!-- Vendors JS -->
+    <!-- Main JS -->
+    <script src="~/js/main.js"></script>
+    <script src="~/js/b4_toast.js"></script>
+    <script src="~/js/site.js"></script>
+    <!-- Page JS -->
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

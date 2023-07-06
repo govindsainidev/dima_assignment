@@ -1,1 +1,1 @@
-﻿Scaffold-DbContext "Server=DESKTOP-80LF158;Database=library;User ID=awaitsoftwares;Password=awaitsoftwares;" Microsoft.EntityFrameworkCore.SqlServer -F -Context LibraryDbContext
+﻿Scaffold-DbContext "Server=<SERVERHOST>;Database=<DABATASENAME>;User ID=<USERID>;Password=<USERPASS>;" Microsoft.EntityFrameworkCore.SqlServer -F -Context LibraryDbContext

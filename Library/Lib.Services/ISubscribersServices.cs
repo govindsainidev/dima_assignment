@@ -43,7 +43,7 @@ namespace Lib.Services
         public ServicesResponse<PagedResults<List<SubscribersDto>>> SubscribersPaging(string search, int page = 1, int pageSize = 10)
         {
             try
-            {
+           {
 
                 int maxPagSize = 50;
                 pageSize = (pageSize > 0 && pageSize <= maxPagSize) ? pageSize : maxPagSize;
@@ -54,19 +54,19 @@ namespace Lib.Services
                 string whereClause = "";
                 if (!string.IsNullOrEmpty(search))
                 {
-                    whereClause = $@" where TRIM(LOWER(s.Firstname)) LIKE TRIM(LOWER('{search}'))+'%' or TRIM(LOWER(b.Lastname)) LIKE TRIM(LOWER('{search}'))+'%'";
+                    whereClause = $@" where TRIM(LOWER(s.Firstname)) LIKE TRIM(LOWER('{search}'))+'%' or TRIM(LOWER(s.Lastname)) LIKE TRIM(LOWER('{search}'))+'%'";
                 }
                 string query = $@"SELECT count(s.Id) AS Totalbook
                                     FROM Subscribers s
                                     LEFT JOIN BooksLoans bl ON bl.SubscriberId = s.Id 
-                                    GROUP BY s.Id 
-                            {whereClause}
+                                    {whereClause}
+                                    GROUP BY s.Id
  
                             SELECT s.Id, s.Firstname, s.Lastname, s.CreatedAt ,s.UpdatedAt, count(bl.Id) AS Totalbook
                             FROM Subscribers s
                             LEFT JOIN BooksLoans bl ON bl.SubscriberId = s.Id 
-                            GROUP BY s.Id, s.Firstname, s.Lastname, s.CreatedAt ,s.UpdatedAt 
                             {whereClause}
+                            GROUP BY s.Id, s.Firstname, s.Lastname, s.CreatedAt ,s.UpdatedAt 
 
                             ORDER BY s.UpdatedAt desc
                             OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY";

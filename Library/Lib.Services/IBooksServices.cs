@@ -174,10 +174,14 @@ namespace Lib.Services
                                    WHERE b.Id = '{id}'";
 
                 BooksDto smodel = _idbConnection.QueryFirstOrDefault<BooksDto>(query, transaction: _idbTransaction);
-                var subscriber = GetBookSubscribers(id).Data.ToList();
-                smodel.TotalSubscribers = subscriber.Count;
-                smodel.Subscribers = subscriber;
-                return ServicesResponse<BooksDto>.Success(smodel);
+                if (smodel != null)
+                {
+                    var subscriber = GetBookSubscribers(id).Data.ToList();
+                    smodel.TotalSubscribers = subscriber.Count;
+                    smodel.Subscribers = subscriber;
+                    return ServicesResponse<BooksDto>.Success(smodel);
+                }
+                return ServicesResponse<BooksDto>.Success(new BooksDto());
 
 
             }

@@ -96,6 +96,7 @@
         });
 
         var onAddUpdateBook = (elm, id) => {
+
             $('#modelCenterDynamicContent').load("/GetBook/" + id, (response, status, xhr) => {
                 if (xhr.status != 200) {
                     showWarningToast(JSON.parse(response).message);

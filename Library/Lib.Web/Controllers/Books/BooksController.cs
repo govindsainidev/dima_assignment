@@ -35,6 +35,7 @@ namespace Lib.Web.Controllers.Books
         [Route("GetBook/{id?}")]
         public IActionResult GetBook(Guid? id)
         {
+           
             var result = _bookSerivce.GetBook(id ?? Guid.Empty);
             if (result.IsSuccess)
             {
@@ -125,5 +126,11 @@ namespace Lib.Web.Controllers.Books
             else { return StatusCode(StatusCodes.Status500InternalServerError, result); }
         }
 
+        [HttpGet]
+        [Route("BooksLoan/{id?}")]
+        public IActionResult BooksLoan(Guid? id)
+        {
+            return View();
+        }
     }
 }

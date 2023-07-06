@@ -251,23 +251,34 @@ th {
 }
 
 .loanedbook {
-    display: flow-root;
+    display: inline-block;
     text-align: left;
-    padding: 0;
+    border: 1px solid #eee;
+    padding: 20px;
+    min-width: 170px;
+    min-height: 120px;
 }
 
     .loanedbook label {
-        background: #eee;
+        background: #576dd7;
         padding: 0 8px;
-        font-size: 13px;
+        font-size: 12px;
         border: 1px solid;
-        border-radius: 3px;
         line-height: 20px;
+        color: #fff;
+        border-radius: 6px;
+    }
+
+    .loanedbook b {
+        display: flex;
+        font-size: 14px;
+        font-weight: 400;
     }
 
     .loanedbook h3 {
-        font-size: 16px;
-        margin-bottom: 5px;
+        font-size: 14px;
+        margin-bottom: 7px;
+        font-weight: 400;
     }
 
         .loanedbook h3 small {
@@ -305,4 +316,12 @@ a.dropdown-item {
 ul.dropdown-menu.show {
     box-shadow: none;
     border: 1px solid #eee;
+}
+
+.subscribername {
+    font-size: 14px;
+}
+
+body {
+    font-size: 14px;
 }

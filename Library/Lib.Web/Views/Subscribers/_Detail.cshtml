@@ -6,7 +6,7 @@
 
 <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title" id="modalCenterTitle">@Model.Firstname @Model.Lastname</h5>
+        
         <button type="button"
                 class="btn-close"
                 data-bs-dismiss="modal"
@@ -15,43 +15,13 @@
 
     <div class="modal-body">
 
+        <h5 class="modal-title" id="modalCenterTitle">Subscriber: @Model.Firstname @Model.Lastname</h5>
         <dl class="row mt-2">
             <dt class="col-sm-3">@Html.LabelFor(s=>s.Firstname)</dt>
             <dd class="col-sm-9">@Model.Firstname</dd>
 
             <dt class="col-sm-3">@Html.LabelFor(s=>s.Lastname)</dt>
             <dd class="col-sm-9">@Model.Lastname</dd>
-
-            <dt class="col-sm-3">@Html.LabelFor(s=>s.Totalbook)</dt>
-            <dd class="col-sm-9">
-                <table class="subscribersBooks">
-                    <tbody>
-                        <tr>
-                            <td>Total</td>
-                            <td>@Model.Totalbook</td>
-                        </tr>
-                        @for (int i = 0; i < Model.LoanedBooks.Count; i++)
-                        {
-                            <tr>
-                                <td>@(i + 1)</td>
-                                <td>
-                                    <div class="loanedbook">
-                                        <h3>
-                                            @Model.LoanedBooks[i].Title
-                                            <small>
-                                                @Model.LoanedBooks[i].AuthorName
-                                            </small>
-                                        </h3>
-                                        <label>@Model.LoanedBooks[i].Genere</label>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-
-                    </tbody>
-                </table>
-
-            </dd>
 
             <dt class="col-sm-3">@Html.LabelFor(s=>s.CreatedAt)</dt>
             <dd class="col-sm-9">@Model.CreatedAt.Value.ToLocalTime().ToString("dd MMM yyyy")</dd>
@@ -61,7 +31,27 @@
 
         </dl>
 
+        <h5 class="modal-title" id="modalCenterTitle">Loand Books</h5>
+        <dl class="row mt-2">
+            <dd >
+                @for (int i = 0; i < Model.LoanedBooks.Count; i++)
+                {
+                     <div class="loanedbook">
+                                <h3>
+                                    @Model.LoanedBooks[i].Title
+                                    <small>
+                                        @Model.LoanedBooks[i].AuthorName
+                                    </small>
+                                </h3>
+                        <label>Gener: </label><b>@Model.LoanedBooks[i].Genere</b>
+                            </div>
+                }
 
+            </dd>
+
+           
+
+        </dl>
     </div>
 
     <div class="modal-footer">

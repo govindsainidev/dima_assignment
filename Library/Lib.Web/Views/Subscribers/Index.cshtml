@@ -7,6 +7,7 @@
         <table id="subscriberDatatable" class="table table-striped table-bordered" width="100%" cellspacing="0">
             <thead>
                 <tr>
+                    <th>#Id</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Books</th>
@@ -25,6 +26,7 @@
     <script>
 
         var $table = $('#subscriberDatatable').dataTable({
+            responsive: true,
             dom: 'Bfrtip',
             buttons: [
                 {
@@ -57,6 +59,7 @@
                 }
             },
             columns: [
+                { "data": "id", "width": 300 },
                 { "data": "firstname", "autoWidth": true },
                 { "data": "lastname", "autoWidth": true },
                 {
@@ -77,7 +80,7 @@
                     }
                 },
                 {
-                    "data": "createdAt", "autoWidth": true, "render": function (data) {
+                    "data": "createdAt", "width": 100, "render": function (data) {
                         var date = new Date(data);
                         var month = date.getMonth() + 1;
                         var day = date.getDate();
@@ -88,7 +91,7 @@
                     },
                 },
                 {
-                    "data": "id", "autoWidth": true,
+                    "data": "id", "width": 100,
                     "render":
                         function (data, row) {
                             return `

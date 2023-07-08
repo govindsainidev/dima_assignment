@@ -29,6 +29,7 @@
     <link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
     <link href="~/lib/datatables/css/datatables.min.css" rel="stylesheet" />
     <link href="~/lib/datatables/css/datatables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/lib/datatables/css/responsive.datatables.min.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" />
     <!-- Vendors CSS -->
     <link href="~/lib/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" />
@@ -58,14 +59,14 @@
                             <ul class="navbar-nav flex-row align-items-center ms-auto">
                                 <!-- User -->
                                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                                    <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                                    <a class="btn btn-sm btn-outline-primary" href="javascript:void(0);" data-bs-toggle="dropdown">
                                        Home
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item" href="javascript:void(0);">
-                                                <i class="bx bx-book me-2"></i>
-                                                <span class="align-middle">Manage Library > </span>
+                                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
+                                                <i class="bx bx-book me-2"></i> 
+                                                Manage Library <i class="bx bx-chevron-right scaleX-n1-rtl"></i>
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li>
@@ -119,11 +120,7 @@
                     <footer class="content-footer footer bg-footer-theme">
                         <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
                             <div class="mb-2 mb-md-0">
-                                © 2022
-                                @* <script>
-                                document.write(new Date().getFullYear());
-                                </script>*@
-
+                                © <script>document.write(new Date().getFullYear()); </script>
                             </div>
 
                         </div>
@@ -167,12 +164,17 @@
     <script src="~/lib/jquery/jquery.js"></script>
     <script src="~/lib/popper/popper.js"></script>
     <script src="~/lib/bootstrap.js"></script>
-    <script src="~/lib/datatable/js/datatable.min.js"></script>
+   
     <script src="~/lib/perfect-scrollbar/perfect-scrollbar.js"></script>
     <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
     <script src="~/lib/datatables/js/datatables.bootstrap4.min.js"></script>
     <script src="~/lib/datatables/js/datatables.buttons.min.js"></script>
+    <script src="~/lib/datatable/js/datatable.min.js"></script>
+    <script src="~/lib/datatables/js/datatables.rowreorder.min.js"></script>
+    <script src="~/lib/datatables/js/datatables.responsive.min.js"></script>
     <script src="~/lib/sweet-alert2/sweetalert2.all.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
     <script src="~/js/menu.js"></script>
     <!-- endbuild -->
@@ -184,6 +186,17 @@
     <!-- Page JS -->
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script>
+        //$.validator.setDefaults({
+        //    onfocusout: true
+        //})
+        $(document).ready(function () {
+            var settings = $.data($('form')[0], 'validator').settings;
+            settings.onfocusin = (element) => {
+                $(element).valid();
+            };
+        })
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

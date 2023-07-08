@@ -27,6 +27,8 @@ namespace Lib.Services
         public ServicesResponse<IEnumerable<BooksDto>> GetAllBooks();
         public ServicesResponse<IEnumerable<SubscribersDto>> GetBookSubscribers(Guid bookid);
         public ServicesResponse<IEnumerable<BooksDto>> SubscriberBooks(Guid subscriberId);
+
+        public ServicesResponse<BooksDto> GetLoanBook(string id_author_title);
     }
 
     public class BooksServices : BaseServices, IBooksServices
@@ -182,6 +184,48 @@ namespace Lib.Services
                     return ServicesResponse<BooksDto>.Success(smodel);
                 }
                 return ServicesResponse<BooksDto>.Success(new BooksDto());
+
+
+            }
+            catch (Exception ex)
+            {
+                return ServicesResponse<BooksDto>.Error(ex.GetActualError());
+            }
+        }
+
+        public ServicesResponse<BooksDto> GetLoanBook(string id_author_title)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(id_author_title))
+                {
+                    bool isValid = Guid.TryParse(id_author_title, out var guidOutput);
+                    string query;
+                    if (isValid)
+                    {
+                        query = $@" SELECT  b.*, ge.Name as Genere, ge.Id as GenereId FROM Books b 
+                                   LEFT JOIN Geners ge ON b.GenereId = ge.Id  
+                                   WHERE b.Id = '{id_author_title}'";
+                    }
+                    else
+                    {
+                        query = $@" SELECT  b.*, ge.Name as Genere, ge.Id as GenereId FROM Books b 
+                                   LEFT JOIN Geners ge ON b.GenereId = ge.Id  
+                                   WHERE b.Title LIKE '{id_author_title}%' or b.AuthorName LIKE '{id_author_title}%'";
+                    }
+
+                    BooksDto smodel = _idbConnection.QueryFirstOrDefault<BooksDto>(query, transaction: _idbTransaction);
+                    if (smodel != null)
+                    {
+                        var subscriber = GetBookSubscribers(smodel.Id.Value).Data.ToList();
+                        smodel.TotalSubscribers = subscriber.Count;
+                        smodel.Subscribers = subscriber;
+                        return ServicesResponse<BooksDto>.Success(smodel);
+                    }
+
+                }
+                
+                return ServicesResponse<BooksDto>.Success(default(BooksDto));
 
 
             }

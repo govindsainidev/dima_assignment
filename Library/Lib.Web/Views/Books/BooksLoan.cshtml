@@ -1,16 +1,46 @@
 ﻿<div class="card">
-    <h5 class="card-header">Loans Books <small>Search loans by book id</small></h5>
-    <div class="card-body">
-        <table id="customerDatatable" class="table table-striped table-bordered" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Author Name</th>
-                    <th>Genere</th>
-                    <th>Created At</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-        </table>
+    <div class="card-header">
+        <div class="navbar-nav align-items-left">
+            <div class="nav-item d-flex align-items-center col-md-4">
+                <input type="text" onkeyup="onEnter(event)" id="searchbookid" class="form-control border-1 shadow-none" placeholder="Search..." aria-label="Search...">
+                <button type="button" class="searchBtn btn btn-outline-primary" onclick="getBooksLoad()">
+                    <i class="bx bx-search fs-4 lh-0"></i>
+                </button>
+            </div>
+        </div>
+
+        <small>Search loans by book id, authorname and book title</small>
+    </div>
+    <div class="card-body" id="booksDynamicContent">
     </div>
 </div>
+
+
+@section scripts {
+    <script>
+        var onEnter = (e, elm) => {
+            e.preventDefault();
+            var keycode = (e.keyCode ? e.keyCode : e.which);
+            if (keycode === 13 || e.key === 'Enter') {
+                getBooksLoad();
+            }
+        }
+        var getBooksLoad = () => {
+
+            $id = $("#searchbookid").val();
+
+            $.get("/GetBooksLoan/" + $id, (data, status) => {
+                debugger;
+                $('#booksDynamicContent').html(data);
+            }).done((data) => {
+            })
+                .fail((jqXHR, textStatus, errorThrown) => {
+                    debugger;
+                    if (typeof jqXHR?.responseJSON?.isSuccess !== "undefined")
+                        showWarningToast(jqXHR.responseJSON.message)
+                });
+
+        }
+    </script>
+
+        }

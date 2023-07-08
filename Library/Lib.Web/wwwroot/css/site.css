@@ -325,3 +325,38 @@ ul.dropdown-menu.show {
 body {
     font-size: 14px;
 }
+
+
+
+@media screen and (min-width: 560px) and (max-width: 764px) {
+    * {
+    }
+
+    .dataTables_wrapper .dataTables_filter {
+        display: inline;
+        float: right;
+    }
+
+    div.dt-buttons {
+        float: left !important;
+    }
+
+    ul.dropdown-menu.show > li ul.dropdown-menu {
+        position: relative !important;
+        display: block !important;
+    }
+}
+
+@media screen and (min-width: 300px) and (max-width: 559px) {
+    * {
+    }
+
+    .dt-buttons {
+        float: left;
+    }
+
+    ul.dropdown-menu.show > li ul.dropdown-menu {
+        position: relative !important;
+        display: block !important;
+    }
+}

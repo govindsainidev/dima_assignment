@@ -15,9 +15,6 @@ namespace Lib.Web.Controllers.Dashboard
             return View();
         }
 
-        public IActionResult Information()
-        {
-            return View();
-        }
+       
     }
 }

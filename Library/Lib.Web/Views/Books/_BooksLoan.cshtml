@@ -1,0 +1,61 @@
+﻿@model Lib.Services.Dtos.BooksDto
+
+@{
+    Layout = null;
+}
+
+
+
+
+@if(Model != null)
+{
+    <h5 class="modal-title" id="modalCenterTitle">Book: @Model.Title</h5>
+    <dl class="row mt-2">
+        <dt class="col-sm-3">@Html.LabelFor(s=>s.Title)</dt>
+        <dd class="col-sm-9">@Model.Title</dd>
+
+        <dt class="col-sm-3">@Html.LabelFor(s=>s.AuthorName)</dt>
+        <dd class="col-sm-9">@Model.AuthorName</dd>
+
+        <dt class="col-sm-3">@Html.LabelFor(s=>s.Genere)</dt>
+        <dd class="col-sm-9">@Model.Genere</dd>
+
+        <dt class="col-sm-3">@Html.LabelFor(s=>s.CreatedAt)</dt>
+        <dd class="col-sm-9">@Model.CreatedAt.Value.ToLocalTime().ToString("dd MMM yyyy")</dd>
+
+        <dt class="col-sm-3">@Html.LabelFor(s=>s.UpdatedAt)</dt>
+        <dd class="col-sm-9">@Model.UpdatedAt.Value.ToLocalTime().ToString("dd MMM yyyy")</dd>
+
+    </dl>
+
+    <h5 class="modal-title" id="modalCenterTitle">Loan Subscribers</h5>
+    <dl class="row mt-2">
+        <dd>
+            @for (int i = 0; i < Model.TotalSubscribers; i++)
+            {
+
+                <h3 class="subscribername">
+                    @Model.Subscribers[i].Firstname
+                    <small>
+                        @Model.Subscribers[i].Lastname
+                    </small>
+                </h3>
+
+
+            }
+
+        </dd>
+
+
+
+    </dl>
+
+}
+else
+{
+    <h6>No data found</h6>
+}
+
+
+
+

@@ -127,10 +127,24 @@ namespace Lib.Web.Controllers.Books
         }
 
         [HttpGet]
-        [Route("BooksLoan/{id?}")]
-        public IActionResult BooksLoan(Guid? id)
+        [Route("BooksLoan")]
+        public IActionResult BooksLoan()
         {
             return View();
+        }
+
+        [HttpGet]
+        [Route("GetBooksLoan/{id_author_title?}")]
+        public IActionResult GetBooksLoan(string? id_author_title)
+        {
+            var result = _bookSerivce.GetLoanBook(id_author_title);
+            if (result.IsSuccess)
+            {
+                return PartialView("_BooksLoan", result.Data);
+            }
+            else { return StatusCode(StatusCodes.Status500InternalServerError, result); }
+
+
         }
     }
 }

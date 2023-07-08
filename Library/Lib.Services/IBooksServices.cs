@@ -200,19 +200,11 @@ namespace Lib.Services
                 if (!string.IsNullOrEmpty(id_author_title))
                 {
                     bool isValid = Guid.TryParse(id_author_title, out var guidOutput);
-                    string query;
-                    if (isValid)
-                    {
-                        query = $@" SELECT  b.*, ge.Name as Genere, ge.Id as GenereId FROM Books b 
+
+                    string query = $@" SELECT  b.*, ge.Name as Genere, ge.Id as GenereId FROM Books b 
                                    LEFT JOIN Geners ge ON b.GenereId = ge.Id  
-                                   WHERE b.Id = '{id_author_title}'";
-                    }
-                    else
-                    {
-                        query = $@" SELECT  b.*, ge.Name as Genere, ge.Id as GenereId FROM Books b 
-                                   LEFT JOIN Geners ge ON b.GenereId = ge.Id  
-                                   WHERE b.Title LIKE '{id_author_title}%' or b.AuthorName LIKE '{id_author_title}%'";
-                    }
+                                   WHERE b.Id like '%{id_author_title}%' or b.Title LIKE '%{id_author_title}%' or b.AuthorName LIKE '%{id_author_title}%'";
+                    
 
                     BooksDto smodel = _idbConnection.QueryFirstOrDefault<BooksDto>(query, transaction: _idbTransaction);
                     if (smodel != null)

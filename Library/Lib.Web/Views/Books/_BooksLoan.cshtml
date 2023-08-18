@@ -1,61 +1,62 @@
-﻿@model Lib.Services.Dtos.BooksDto
+﻿@model IEnumerable<Lib.Services.Dtos.BooksDto>
 
 @{
     Layout = null;
 }
 
 
+<div class="row">
 
+    @if (Model?.Count() > 0)
+    {
+        foreach (var item in Model)
+        {
+            <div class="col-md-6">
+                <div class="searchbook">
+                    <div class="loanedbook loondbooksearch">
 
-@if(Model != null)
-{
-    <h5 class="modal-title" id="modalCenterTitle">Book: @Model.Title</h5>
-    <dl class="row mt-2">
-        <dt class="col-sm-3">@Html.LabelFor(s=>s.Title)</dt>
-        <dd class="col-sm-9">@Model.Title</dd>
+                        <div class="bookTitle">
+                            <i class="bx bx-book-content"></i>
+                            <h3>
+                                @item.Title
+                                <small>
+                                    @item.AuthorName
+                                </small>
+                            </h3>
+                        </div>
+                        <span class="geners">
+                            <label>Gener </label><b>@item.Genere</b>
+                        </span>
 
-        <dt class="col-sm-3">@Html.LabelFor(s=>s.AuthorName)</dt>
-        <dd class="col-sm-9">@Model.AuthorName</dd>
+                        <h3 class="card-header padding-none">
+                            Book Subscriber ( @item.TotalSubscribers )<small>
 
-        <dt class="col-sm-3">@Html.LabelFor(s=>s.Genere)</dt>
-        <dd class="col-sm-9">@Model.Genere</dd>
+                            </small>
+                        </h3>
+                        @for (int i = 0; i < item.TotalSubscribers; i++)
+                        {
+                            <div class="booksubscriber">
+                                <i class="bx bx-user-check"></i>
+                                <h3 class="subscribername">
+                                    @item.Subscribers[i].Firstname
+                                    <small>
+                                        @item.Subscribers[i].Lastname
+                                    </small>
+                                </h3>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
 
-        <dt class="col-sm-3">@Html.LabelFor(s=>s.CreatedAt)</dt>
-        <dd class="col-sm-9">@Model.CreatedAt.Value.ToLocalTime().ToString("dd MMM yyyy")</dd>
+    }
+    else
+    {
+        <h6>No books found</h6>
+    }
 
-        <dt class="col-sm-3">@Html.LabelFor(s=>s.UpdatedAt)</dt>
-        <dd class="col-sm-9">@Model.UpdatedAt.Value.ToLocalTime().ToString("dd MMM yyyy")</dd>
-
-    </dl>
-
-    <h5 class="modal-title" id="modalCenterTitle">Loan Subscribers</h5>
-    <dl class="row mt-2">
-        <dd>
-            @for (int i = 0; i < Model.TotalSubscribers; i++)
-            {
-
-                <h3 class="subscribername">
-                    @Model.Subscribers[i].Firstname
-                    <small>
-                        @Model.Subscribers[i].Lastname
-                    </small>
-                </h3>
-
-
-            }
-
-        </dd>
-
-
-
-    </dl>
-
-}
-else
-{
-    <h6>No data found</h6>
-}
-
+</div>
 
 
 

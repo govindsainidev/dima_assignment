@@ -32,8 +32,11 @@ namespace Lib.Services
 
         private void OpenConnection()
         {
-            if (_idbConnection.State != ConnectionState.Open)
-                _idbConnection?.Open();
+            lock (_idbConnection)
+            {
+                if (_idbConnection.State != ConnectionState.Open)
+                    _idbConnection?.Open();
+            }
         }
         public void Initilize()
         {

@@ -30,6 +30,7 @@
     <link href="~/lib/datatables/css/datatables.min.css" rel="stylesheet" />
     <link href="~/lib/datatables/css/datatables.bootstrap4.min.css" rel="stylesheet" />
     <link href="~/lib/datatables/css/responsive.datatables.min.css" rel="stylesheet" />
+    <link href="~/css/newtheme.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" />
     <!-- Vendors CSS -->
     <link href="~/lib/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" />
@@ -41,9 +42,9 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="~/js/config.js"></script>
-
+    @RenderSection("Style", required: false)
 </head>
-<body>
+<body class="blue_bg">
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar layout-without-menu">
         <div class="layout-container">
@@ -51,57 +52,49 @@
             <div class="layout-page">
                 <!-- Navbar -->
 
-                <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+                <nav class="layout-navbar container-xxl navbar box-layout box-layout-home"
                      id="layout-navbar">
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                         <!-- Search -->
                         <div class="navbar-nav align-items-center">
-                            <ul class="navbar-nav flex-row align-items-center ms-auto">
-                                <!-- User -->
-                                <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                                    <a class="btn btn-sm btn-outline-primary" href="javascript:void(0);" data-bs-toggle="dropdown">
-                                       Home
+                            <ul class="navbar-nav flex-row align-items-center ms-auto" id="navigationlinks">
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Index","Dashboard")">
+                                        <i class='bx bxs-home me-2'></i>
+                                        <span class="align-middle">Home </span>
                                     </a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
-                                                <i class="bx bx-book me-2"></i> 
-                                                Manage Library <i class="bx bx-chevron-right scaleX-n1-rtl"></i>
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a class="dropdown-item" href="@Url.Action("Index","Subscribers")">
-                                                        <i class='bx bxs-book-reader me-2'></i>
-                                                        <span class="align-middle">Add Subscribers </span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="@Url.Action("Index","Books")">
-                                                        <i class='bx bx-book-add me-2'></i>
-                                                        <span class="align-middle">Add Books</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="@Url.Action("Index","Genere")">
-                                                        <i class='bx bx-book-add me-2'></i>
-                                                        <span class="align-middle">Add Gener</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="@Url.Action("BooksLoan","Books")">
-                                                <i class='bx bx-book-bookmark me-2'></i>
-                                                <span class="align-middle">Loan/Books</span>
-                                            </a>
-                                        </li> 
-                                    </ul>
                                 </li>
-                                <!--/ User -->
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Index","Subscribers")">
+                                        <i class='bx bxs-book-reader me-2'></i>
+                                        <span class="align-middle">Subscribers </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Index","Books")">
+                                        <i class='bx bx-book-add me-2'></i>
+                                        <span class="align-middle">Add Books</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Index","Genere")">
+                                        <i class='bx bx-book-add me-2'></i>
+                                        <span class="align-middle">Add Gener</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("BooksLoan","Books")">
+                                        <i class='bx bx-book-bookmark me-2'></i>
+                                        <span class="align-middle">Loan/Books</span>
+                                    </a>
+                                </li>
+
+
+
                             </ul>
-                            
+
                         </div>
-                        
+
                     </div>
                 </nav>
 
@@ -120,7 +113,7 @@
                     <footer class="content-footer footer bg-footer-theme">
                         <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
                             <div class="mb-2 mb-md-0">
-                                © <script>document.write(new Date().getFullYear()); </script>
+                                © <script>document.write(new Date().getFullYear());</script>
                             </div>
 
                         </div>
@@ -164,7 +157,7 @@
     <script src="~/lib/jquery/jquery.js"></script>
     <script src="~/lib/popper/popper.js"></script>
     <script src="~/lib/bootstrap.js"></script>
-   
+
     <script src="~/lib/perfect-scrollbar/perfect-scrollbar.js"></script>
     <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
     <script src="~/lib/datatables/js/datatables.bootstrap4.min.js"></script>
@@ -186,17 +179,27 @@
     <!-- Page JS -->
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+
     <script>
-        //$.validator.setDefaults({
-        //    onfocusout: true
-        //})
         $(document).ready(function () {
-            var settings = $.data($('form')[0], 'validator').settings;
-            settings.onfocusin = (element) => {
-                $(element).valid();
-            };
+            const current = window.location.href;
+            document.querySelectorAll("#navigationlinks a").forEach(function (elm) {
+                elem = elm.parentElement;
+                //elem.classList.add("btn-outline-secondary");
+                if (elm.href == (current)) {
+                    elem.classList.add("active");
+                }
+                else {
+                    elem.classList.remove("active");
+                }
+
+            });
+
+            formValiderRefresh($('form')[0])
+
         })
     </script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

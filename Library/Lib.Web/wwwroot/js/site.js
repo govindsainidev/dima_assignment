@@ -2,6 +2,19 @@
 //  * UI Tooltips & Popovers
 //  */
 
+formValiderRefresh = () => {
+    $form = $('form')[0];
+    if ($form) {
+        
+        $.validator.unobtrusive.parse($form)
+
+        var settings = $.data($form, 'validator').settings;
+        settings.onfocusin = (element) => {
+            $(element).valid();
+        };
+    }
+   
+}
 'use strict';
 (function () {
     const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
@@ -9,4 +22,5 @@
         // added { html: true, sanitize: false } option to render button in content area of popover
         return new bootstrap.Popover(popoverTriggerEl, { html: true, sanitize: false });
     });
+    formValiderRefresh();
 })();

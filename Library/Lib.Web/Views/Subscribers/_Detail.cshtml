@@ -6,16 +6,18 @@
 
 <div class="modal-content">
     <div class="modal-header">
-        
+        <h5 class="card-header">@Model.Firstname @Model.Lastname <small>
+                Subscriber information
+            </small>
+        </h5>
         <button type="button"
                 class="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"></button>
     </div>
 
-    <div class="modal-body">
+    <div class="modal-body padding-bt-none">
 
-        <h5 class="modal-title" id="modalCenterTitle">Subscriber: @Model.Firstname @Model.Lastname</h5>
         <dl class="row mt-2">
             <dt class="col-sm-3">@Html.LabelFor(s=>s.Firstname)</dt>
             <dd class="col-sm-9">@Model.Firstname</dd>
@@ -31,19 +33,27 @@
 
         </dl>
 
-        <h5 class="modal-title" id="modalCenterTitle">Loand Books</h5>
+        <br/>
+        <h5 class="card-header">
+            Subscriber Loand Books<small>
+                Total: Model.LoanedBooks.Count
+            </small>
+        </h5>
         <dl class="row mt-2">
             <dd >
                 @for (int i = 0; i < Model.LoanedBooks.Count; i++)
                 {
                      <div class="loanedbook">
+                         <i class="bx bx-book-content"></i>
                                 <h3>
                                     @Model.LoanedBooks[i].Title
                                     <small>
                                         @Model.LoanedBooks[i].AuthorName
                                     </small>
                                 </h3>
-                        <label>Gener: </label><b>@Model.LoanedBooks[i].Genere</b>
+                       <span class="geners">
+                            <label>Gener </label><b>@Model.LoanedBooks[i].Genere</b>
+                       </span>
                             </div>
                 }
 
@@ -55,7 +65,7 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+        <button type="button" class="btn-sm  btn btn-outline-secondary" data-bs-dismiss="modal">
             Close
         </button>
     </div>

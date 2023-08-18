@@ -123,8 +123,7 @@
                 else {
                     $("#modalCenter").modal("show");
                     setTimeout(() => {
-                        $form = $("#modalCenter form")[0];
-                        $.validator.unobtrusive.parse($form)
+                        formValiderRefresh();
                     }, 1000)
                 }
 
@@ -188,8 +187,7 @@
                 else {
                     $("#modalCenter").modal("show");
                     setTimeout(() => {
-                        $form = $("#modalCenter form")[0];
-                        $.validator.unobtrusive.parse($form)
+                        formValiderRefresh();
                     }, 1000)
                 }
 
@@ -201,14 +199,15 @@
             
             let subscriber_books_collection = document.querySelector("#subscriber_books_collection");
             let inputName = subscriber_books_collection.dataset.key;;
-            debugger;
+            
             let maxbookallowed = @adminsetting.Value.MaxLoanedAmount;
             let books = [...document.querySelectorAll("#selected_books_container input[type='hidden']")];
-            if (books.length >= maxbookallowed){
+            let selectedBooks = [...document.querySelectorAll('#available_books_container input[type="checkbox"]:checked')];
+            if (books.length >= maxbookallowed || selectedBooks.length > maxbookallowed) {
                 showWarningToast("A subscriber can loan up to " + maxbookallowed + " books");
                 return;
             }
-            let leftSelectedBooks = [...document.querySelectorAll('#available_books_container input[type="checkbox"]:checked')].map(s => {
+            let leftSelectedBooks = selectedBooks.map(s => {
                 
                 let $span = s.parentElement;
                 $(generateInput(inputName, s.value)).appendTo($span);
@@ -216,7 +215,6 @@
                 $($span).prependTo("#selected_books_container");
                 return s;
             });
-
 
         }
         var onRemoveBook = (elm) => {

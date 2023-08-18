@@ -28,7 +28,7 @@ namespace Lib.Services
         public ServicesResponse<IEnumerable<SubscribersDto>> GetBookSubscribers(Guid bookid);
         public ServicesResponse<IEnumerable<BooksDto>> SubscriberBooks(Guid subscriberId);
 
-        public ServicesResponse<BooksDto> GetLoanBook(string id_author_title);
+        public ServicesResponse<IEnumerable<BooksDto>> GetLoanBook(string id_author_title);
     }
 
     public class BooksServices : BaseServices, IBooksServices
@@ -193,7 +193,7 @@ namespace Lib.Services
             }
         }
 
-        public ServicesResponse<BooksDto> GetLoanBook(string id_author_title)
+        public ServicesResponse<IEnumerable<BooksDto>> GetLoanBook(string id_author_title)
         {
             try
             {
@@ -204,26 +204,30 @@ namespace Lib.Services
                     string query = $@" SELECT  b.*, ge.Name as Genere, ge.Id as GenereId FROM Books b 
                                    LEFT JOIN Geners ge ON b.GenereId = ge.Id  
                                    WHERE b.Id like '%{id_author_title}%' or b.Title LIKE '%{id_author_title}%' or b.AuthorName LIKE '%{id_author_title}%'";
-                    
 
-                    BooksDto smodel = _idbConnection.QueryFirstOrDefault<BooksDto>(query, transaction: _idbTransaction);
+
+                    IEnumerable<BooksDto> smodel = _idbConnection.Query<BooksDto>(query, transaction: _idbTransaction);
                     if (smodel != null)
                     {
-                        var subscriber = GetBookSubscribers(smodel.Id.Value).Data.ToList();
-                        smodel.TotalSubscribers = subscriber.Count;
-                        smodel.Subscribers = subscriber;
-                        return ServicesResponse<BooksDto>.Success(smodel);
+                        foreach (var item in smodel)
+                        {
+                            var subscriber = GetBookSubscribers(item.Id.Value).Data.ToList();
+                            item.TotalSubscribers = subscriber.Count;
+                            item.Subscribers = subscriber;
+                        }
+                       
+                        return ServicesResponse<IEnumerable<BooksDto>>.Success(smodel);
                     }
 
                 }
                 
-                return ServicesResponse<BooksDto>.Success(default(BooksDto));
+                return ServicesResponse<IEnumerable<BooksDto>>.Success(default(IEnumerable<BooksDto>));
 
 
             }
             catch (Exception ex)
             {
-                return ServicesResponse<BooksDto>.Error(ex.GetActualError());
+                return ServicesResponse<IEnumerable<BooksDto>>.Error(ex.GetActualError());
             }
         }
 

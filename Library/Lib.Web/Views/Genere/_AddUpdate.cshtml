@@ -6,7 +6,7 @@
 
 <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title" id="modalCenterTitle">Add Genere</h5>
+        <h5 class="card-header">Add or Update genere <small>Genere information</small></h5>
         <button type="button"
                 class="btn-close"
                 data-bs-dismiss="modal"
@@ -17,25 +17,27 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(s => s.Id)
         <div class="modal-body" id="modalCenterBody">
-            <div class="mb-3">
-                @Html.LabelFor(s=>s.Name,"Name",  htmlAttributes: new {@class= "form-label"})
+            <div class="mb-3 form-floating">
+                
                 @Html.TextBoxFor(s=>s.Name, htmlAttributes: new {@class= "form-control", placeholder="Enter Name"})
+                @Html.LabelFor(s=>s.Name,"Name",  htmlAttributes: new {@class= "form-label"})
                 @Html.ValidationMessageFor(s => s.Name, "", new { @class = "text-danger" })
             </div>
            
-            <div class="mb-3">
-                @Html.LabelFor(s=>s.Description,"Description", new {@class= "form-label"})
+            <div class="mb-3 form-floating">
+                
                 @Html.TextBoxFor(s=>s.Description, htmlAttributes: new {@class= "form-control", placeholder="Enter Description"})
+                @Html.LabelFor(s=>s.Description,"Description", new {@class= "form-label"})
                 @Html.ValidationMessageFor(s => s.Description, "", new { @class = "text-danger" })
             </div>
 
         </div>
 
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            <button type="button" class="btn-sm btn btn-outline-secondary" data-bs-dismiss="modal">
                 Close
             </button>
-            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="submit" class="btn-sm btn btn-primary">Save changes</button>
         </div>
     </form>
 </div>

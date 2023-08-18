@@ -124,6 +124,15 @@
     line-height: 22px;
 }
 
+.modal-body .card-header {
+    padding: 0;
+}
+
+.modal-header .card-header {
+    margin: 0 !important;
+    padding: 0;
+}
+
 .menu-vertical .menu-inner > .menu-item .menu-link {
     margin: 0px;
     border-radius: 0 !important;
@@ -160,45 +169,64 @@ table.dataTable {
 .table-loanedbooks {
     width: 100%;
     border: 1px solid #ddd;
-    height: 190px;
+    /* height: 190px; */
     overflow: scroll;
 }
 
     .table-loanedbooks tr th, .table-loanedbooks tr td {
-        border: 1px solid #ddd;
+        border-right: 1px solid #ddd !important;
     }
 
-        .table-loanedbooks tr td span {
-            margin: -1px -11px;
-            display: block;
-            position: relative;
-            vertical-align: top;
+    .table-loanedbooks tr td {
+        border-top: none;
+        border-bottom: none;
+    }
+
+#selected_books_container {
+    padding: 0;
+}
+
+#available_books_container {
+    padding: 0;
+    border: none;
+}
+
+.modal-content {
+    border-radius: 0 !important;
+}
+
+.table-loanedbooks tr td span {
+    margin: 0;
+    display: block;
+    position: relative;
+    vertical-align: top;
+}
+
+    .table-loanedbooks tr td span input[type="checkbox"] {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        position: absolute;
+    }
+
+        .table-loanedbooks tr td span input[type="checkbox"]:checked + label {
+            background: #8BC34A;
+            border-color: #c7c7c7;
+            color: #fff;
         }
 
-            .table-loanedbooks tr td span input[type="checkbox"] {
-                opacity: 0;
-                width: 0;
-                height: 0;
-                position: absolute;
-            }
-
-                .table-loanedbooks tr td span input[type="checkbox"]:checked + label {
-                    background: #8BC34A;
-                    border-color: #c7c7c7;
-                    color: #fff;
-                }
-
-        .table-loanedbooks tr td label {
-            position: relative;
-            font-size: 13px;
-            border: 1px solid #ddd;
-            padding: 6px 10px;
-            border-radius: 0;
-            margin: 0;
-            display: inline-block;
-            line-height: 18px;
-            width: 100%;
-        }
+.table-loanedbooks tr td label {
+    position: relative;
+    font-size: 13px;
+    border-top: 1px solid #ddd;
+    padding: 9px 10px;
+    border-radius: 0;
+    margin: 0px 0;
+    display: inline-block;
+    line-height: 18px;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+}
 
 
 .tableFixHead {
@@ -211,7 +239,6 @@ table.dataTable {
         display: block;
         width: 100%;
         overflow: auto;
-        height: 200px;
     }
 
     .tableFixHead thead tr {
@@ -220,8 +247,8 @@ table.dataTable {
 
     .tableFixHead th,
     .tableFixHead td {
-        padding: 5px 10px;
-        width: 269px;
+        padding: 11px 10px;
+        width: 257px;
         /* border: none !IMPORTANT; */
         vertical-align: top;
     }
@@ -234,9 +261,10 @@ th {
     position: absolute;
     top: 42%;
     left: 46%;
-    width: 28px;
+    width: 39px;
     background: #fff;
-    border-radius: 3px;
+    border-radius: 7px;
+    padding: 5px;
 }
 
 .loand_container {
@@ -253,26 +281,31 @@ th {
 .loanedbook {
     display: inline-block;
     text-align: left;
-    border: 1px solid #eee;
-    padding: 20px;
-    min-width: 170px;
-    min-height: 120px;
+    border: 1px solid #999;
+    padding: 15px;
+    min-width: 150px;
+    min-height: 100px;
 }
+
+    .loanedbook i {
+        margin-bottom: 5px;
+        display: inline-flex;
+    }
 
     .loanedbook label {
         background: #576dd7;
-        padding: 0 8px;
-        font-size: 12px;
-        border: 1px solid;
+        padding: 0 5px;
+        border: 0;
         line-height: 20px;
         color: #fff;
-        border-radius: 6px;
+        border-radius: 0;
+    }
+
+    .loanedbook b {
     }
 
     .loanedbook b {
         display: flex;
-        font-size: 14px;
-        font-weight: 400;
     }
 
     .loanedbook h3 {
@@ -326,6 +359,56 @@ body {
     font-size: 14px;
 }
 
+
+.padding-bt-none {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.padding-lr-none {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.padding-none {
+    padding: 0 !important
+}
+
+
+
+.geners {
+    display: inline-flex;
+    border: 1px solid #3c527d;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 20px;
+    padding-right: 10px;
+    margin-top: 10px;
+}
+
+    .geners label {
+        margin-right: 5px;
+    }
+
+
+.booksubscriber {
+    display: inline-flex;
+    padding: 5px 8px;
+    border: 1px solid;
+}
+
+    .booksubscriber h3 {
+        margin: 0;
+        color: #000;
+        line-height: 19px;
+    }
+
+        .booksubscriber h3 small {
+        }
+
+    .booksubscriber i {
+        margin-right: 5px;
+    }
 
 
 @media screen and (min-width: 560px) and (max-width: 764px) {

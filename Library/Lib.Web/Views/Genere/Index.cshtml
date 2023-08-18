@@ -92,8 +92,7 @@
                 else {
                     $("#modalCenter").modal("show");
                     setTimeout(() => {
-                        $form = $("#modalCenter form")[0];
-                        $.validator.unobtrusive.parse($form)
+                        formValiderRefresh();
                     }, 1000)
                 }
 
@@ -157,8 +156,7 @@
                 else {
                     $("#modalCenter").modal("show");
                     setTimeout(() => {
-                        $form = $("#modalCenter form")[0];
-                        $.validator.unobtrusive.parse($form)
+                        formValiderRefresh();
                     }, 1000)
                 }
 
